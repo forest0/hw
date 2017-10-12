@@ -1,1 +1,12 @@
+# General
+*.pdf
+*.doc
+*.docx
+
+
+# Deep Learning
 deep_learning/task1/pictures
+
+
+# Computer Graphics
+computer_graphics/task1/doc/demo
