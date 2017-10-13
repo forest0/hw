@@ -3,6 +3,8 @@
 *.doc
 *.docx
 
+# vim swap file
+*.swp
 
 # Deep Learning
 deep_learning/task1/pictures
