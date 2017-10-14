@@ -1,7 +1,8 @@
-#include "Utils.h"
 #include <chrono>
 #include <sstream>
 #include <iomanip>
+#include "Utils.h"
+#include "Log.h"
 
 std::string Utils::getCurrentTimeString() {
     auto now = std::chrono::system_clock::now();
@@ -14,4 +15,22 @@ std::string Utils::getCurrentTimeString() {
     ss << std::put_time(std::localtime(&now_c), "%T") << "."
         << std::setw(3) << std::setfill('0') << ms;
     return ss.str();
+}
+
+std::string Utils::toString(FigureType type) {
+    switch(type) {
+        case FigureType::line:
+            return "line";
+        case FigureType::rectangle:
+            return "rectangle";
+        case FigureType::polygon:
+            return "polygon";
+        case FigureType::ellipse:
+            return "ellipse";
+        case FigureType::freeDraw:
+            return "freeDraw";
+        default:
+            Log::e("invalid figure type");
+            return "";
+    }
 }

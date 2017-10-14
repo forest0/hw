@@ -15,7 +15,7 @@ TEMPLATE = app
 # any feature of Qt which has been marked as deprecated (the exact warnings
 # depend on your compiler). Please consult the documentation of the
 # deprecated API in order to know how to port your code away from it.
-DEFINES += QT_DEPRECATED_WARNINGS
+# DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG  += c++11
 
@@ -36,7 +36,8 @@ SOURCES += \
         model/figures/Line.cpp \
         model/figures/Ellipse.cpp \
         model/figures/Polygon.cpp \
-        model/figures/FreeDraw.cpp
+        model/figures/FreeDraw.cpp \
+        model/figures/Rectangle.cpp
 
 HEADERS += \
         Constants.h \
@@ -49,8 +50,8 @@ HEADERS += \
         model/figures/Line.h \
         model/figures/Ellipse.h \
         model/figures/Polygon.h \
-        model/figures/FreeDraw.h
+        model/figures/FreeDraw.h \
+        model/figures/Rectangle.cpp
 
 FORMS += \
-        MainWindow.ui \
-        BoardView.ui
+        view/MainWindow.ui \
