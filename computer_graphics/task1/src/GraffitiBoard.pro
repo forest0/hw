@@ -27,14 +27,30 @@ CONFIG  += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp \
-        Log.cpp \
-        Utils.cpp
+        tools/Log.cpp \
+        tools/Utils.cpp \
+        view/MainWindow.cpp \
+        view/BoardView.cpp \
+        model/Board.cpp \
+        model/figures/Figure.cpp \
+        model/figures/Line.cpp \
+        model/figures/Ellipse.cpp \
+        model/figures/Polygon.cpp \
+        model/figures/FreeDraw.cpp
 
 HEADERS += \
-        mainwindow.h \
-        Log.h \
-        Utils.h
+        Constants.h \
+        tools/Log.h \
+        tools/Utils.h \
+        view/MainWindow.h \
+        view/BoardView.h \
+        model/Board.h \
+        model/figures/Figure.h \
+        model/figures/Line.h \
+        model/figures/Ellipse.h \
+        model/figures/Polygon.h \
+        model/figures/FreeDraw.h
 
 FORMS += \
-        mainwindow.ui
+        MainWindow.ui \
+        BoardView.ui

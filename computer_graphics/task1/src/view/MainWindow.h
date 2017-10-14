@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QAction>
 
 namespace Ui {
 class MainWindow;
@@ -17,6 +18,13 @@ public:
 
 private:
     Ui::MainWindow *ui;
+
+    QAction *lineAction;
+    QAction *ellipseAction;
+    QAction *rectangleAction;
+    QAction *polygonAction;
+    QAction *freeDrawAction;
+    QAction *undoAction;
 };
 
 #endif // MAINWINDOW_H
