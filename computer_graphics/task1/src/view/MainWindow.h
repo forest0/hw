@@ -48,6 +48,7 @@ private:
     void setDrawingTypeLabelText(FigureType type);
 
     void addActions();
+    void addIcons();
     void addConnections();
     void addActionsAndConnections();
     void initStatusBar();

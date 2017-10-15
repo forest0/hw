@@ -36,6 +36,25 @@ void MainWindow::addActions() {
     undoAction->setEnabled(false);
     redoAction->setEnabled(false);
 
+    addIcons();
+}
+
+void MainWindow::addIcons() {
+    QIcon lineIcon(":/resources/icon/line.png");
+    lineAction->setIcon(lineIcon);
+    QIcon ellipseIcon(":/resources/icon/ellipse.png");
+    ellipseAction->setIcon(ellipseIcon);
+    QIcon rectangleIcon(":/resources/icon/rectangle.png");
+    rectangleAction->setIcon(rectangleIcon);
+    QIcon polygonIcon(":/resources/icon/polygon.png");
+    polygonAction->setIcon(polygonIcon);
+    QIcon freeDrawIcon(":/resources/icon/free.png");
+    freeDrawAction->setIcon(freeDrawIcon);
+
+    QIcon undoIcon(":/resources/icon/undo.png");
+    undoAction->setIcon(undoIcon);
+    QIcon redoIcon(":/resources/icon/redo.png");
+    redoAction->setIcon(redoIcon);
 }
 
 void MainWindow::addConnections() {
