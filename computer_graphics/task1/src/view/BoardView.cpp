@@ -47,7 +47,10 @@ void BoardView::paintEvent(QPaintEvent *event) {
             painter.drawLine(startPoint, endPoint);
             break;
         case FigureType::freeDraw:
-            painter.drawLines(traces);
+            for (int i=0; i < traces.size()-1; ++i) {
+                painter.drawLine(traces[i], traces[i+1]);
+            }
+            painter.drawLine(startPoint, endPoint);
             break;
     }
 }
