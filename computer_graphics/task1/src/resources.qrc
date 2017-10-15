@@ -7,5 +7,6 @@
         <file>resources/icon/rectangle.png</file>
         <file>resources/icon/redo.png</file>
         <file>resources/icon/undo.png</file>
+        <file>resources/icon/mainIcon.png</file>
     </qresource>
 </RCC>

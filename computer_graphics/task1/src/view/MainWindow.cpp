@@ -55,21 +55,17 @@ void MainWindow::addActions() {
 }
 
 void MainWindow::addIcons() {
-    QIcon lineIcon(":/resources/icon/line.png");
-    lineAction->setIcon(lineIcon);
-    QIcon ellipseIcon(":/resources/icon/ellipse.png");
-    ellipseAction->setIcon(ellipseIcon);
-    QIcon rectangleIcon(":/resources/icon/rectangle.png");
-    rectangleAction->setIcon(rectangleIcon);
-    QIcon polygonIcon(":/resources/icon/polygon.png");
-    polygonAction->setIcon(polygonIcon);
-    QIcon freeDrawIcon(":/resources/icon/free.png");
-    freeDrawAction->setIcon(freeDrawIcon);
+    
+    lineAction->setIcon(QIcon(":/resources/icon/line.png"));
+    ellipseAction->setIcon(QIcon(":/resources/icon/ellipse.png"));
+    rectangleAction->setIcon(QIcon(":/resources/icon/rectangle.png"));
+    polygonAction->setIcon(QIcon(":/resources/icon/polygon.png"));
+    freeDrawAction->setIcon(QIcon(":/resources/icon/free.png"));
 
-    QIcon undoIcon(":/resources/icon/undo.png");
-    undoAction->setIcon(undoIcon);
-    QIcon redoIcon(":/resources/icon/redo.png");
-    redoAction->setIcon(redoIcon);
+    undoAction->setIcon(QIcon(":/resources/icon/undo.png"));
+    redoAction->setIcon(QIcon(":/resources/icon/redo.png"));
+
+    this->setWindowIcon(QIcon(":/resources/icon/mainIcon.png"));
 }
 
 void MainWindow::addConnections() {
