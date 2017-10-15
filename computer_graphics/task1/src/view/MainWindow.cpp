@@ -2,6 +2,7 @@
 #include "ui_MainWindow.h"
 #include "../tools/Utils.h"
 #include <QtWidgets/QFrame>
+#include <QtWidgets/QMenu>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -22,6 +23,19 @@ void MainWindow::addActions() {
     undoAction      = new QAction(tr("undo"), this);
     redoAction      = new QAction(tr("redo"), this);
 
+    // add actions to editMenu
+    editMenu->addAction(lineAction);
+    editMenu->addAction(ellipseAction);
+    editMenu->addAction(rectangleAction);
+    editMenu->addAction(polygonAction);
+    editMenu->addAction(freeDrawAction);
+
+    editMenu->addSeparator();
+
+    editMenu->addAction(undoAction);
+    editMenu->addAction(redoAction);
+
+    // add actions to toolbar
     ui->mainToolBar->addAction(lineAction);
     ui->mainToolBar->addAction(ellipseAction);
     ui->mainToolBar->addAction(rectangleAction);
@@ -32,6 +46,7 @@ void MainWindow::addActions() {
 
     ui->mainToolBar->addAction(undoAction);
     ui->mainToolBar->addAction(redoAction);
+
     // redo and undo is disabled at the beginning
     undoAction->setEnabled(false);
     redoAction->setEnabled(false);
@@ -99,6 +114,11 @@ void MainWindow::addActionsAndConnections() {
     addConnections();
 }
 
+void MainWindow::initMenuBar() {
+    editMenu = new QMenu(tr("Edit"), this);
+    ui->menuBar->addMenu(editMenu);
+}
+
 // TODO: alignment
 void MainWindow::initStatusBar() {
     fixedLabelOnStatusBar = new QLabel(tr("current drawing: "), this);
@@ -128,10 +148,14 @@ void MainWindow::initWindow() {
     this->setCentralWidget(&boardView);
     this->setWindowTitle("Simple Graffit Board");
 
+    initMenuBar();
     initStatusBar();
 }
 
 MainWindow::~MainWindow() {
+    delete drawingTypeLabelOnStatusBar;
+    delete fixedLabelOnStatusBar;
+    delete editMenu;
     delete redoAction;
     delete undoAction;
     delete freeDrawAction;

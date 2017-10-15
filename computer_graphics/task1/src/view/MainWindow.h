@@ -42,6 +42,8 @@ private:
     QAction *undoAction;
     QAction *redoAction;
 
+    QMenu *editMenu;
+
     QLabel *fixedLabelOnStatusBar;
     QLabel *drawingTypeLabelOnStatusBar;
 
@@ -52,6 +54,7 @@ private:
     void addConnections();
     void addActionsAndConnections();
     void initStatusBar();
+    void initMenuBar();
     void initWindow();
 };
 
