@@ -32,6 +32,56 @@ Ubuntu 14.04 + Qt 5.2.1 + Qt Creator 4.4.1 + GCC 5.4.1
 
 注: *图1仅是为了表明继承关系和统一接口, 并未展示出其全部成员.*
 
+## 项目结构
+
+```
+src
+├── Constants.h                 <-- 常量定义
+├── GraffitiBoard.pro           <-- Qt 项目文件
+├── GraffitiBoard.pro.user
+├── main.cpp                    <-- 入口文件
+├── model                       <-- 这个目录存放数据类
+│   ├── Board.cpp
+│   ├── Board.h                 <-- 主要数据模型
+│   └── figures                 <-- 这个目录存放各种图形类
+│       ├── Ellipse.cpp
+│       ├── Ellipse.h
+│       ├── Figure.cpp
+│       ├── Figure.h            <-- 图形基类
+│       ├── FreeDraw.cpp
+│       ├── FreeDraw.h
+│       ├── Line.cpp
+│       ├── Line.h
+│       ├── Polygon.cpp
+│       ├── Polygon.h
+│       ├── Rectangle.cpp
+│       └── Rectangle.h
+├── resources                   <-- 资源文件夹
+│   └── icon
+│       ├── ellipse.png
+│       ├── free.png
+│       ├── line.png
+│       ├── mainIcon.png
+│       ├── polygon.png
+│       ├── rectangle.png
+│       ├── redo.png
+│       └── undo.png
+├── resources.qrc               <-- Qt 资源文件
+├── tools                       <-- 这个目录存放工具类
+│   ├── Log.cpp
+│   ├── Log.h
+│   ├── Utils.cpp
+│   └── Utils.h
+└── view                        <-- 这个目录存放视图类
+    ├── BoardView.cpp
+    ├── BoardView.h             <-- 主要视图类
+    ├── MainWindow.cpp
+    ├── MainWindow.h            <-- 主程序窗体
+    └── MainWindow.ui
+
+6 directories, 36 files
+```
+
 ## 优点与缺点
 
 优点:
