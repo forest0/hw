@@ -2,6 +2,7 @@
 *.pdf
 *.doc
 *.docx
+*.png
 
 # vim swap file
 *.swp
