@@ -15,6 +15,7 @@ BoardView::BoardView(QWidget *parent) :
 {
     isDrawing = false;
 
+    // update boardView when board change
     connect(board, &Board::shownFiguresAmountChange,
             this, &BoardView::onShownFiguresAmountChange);
     connect(board, &Board::deletedFiguresAmountChange,
@@ -27,9 +28,13 @@ BoardView::~BoardView() {
 
 void BoardView::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
+
+    // draw items in board->shownFigures
     for (const auto &item : *(board->getShownFigures())) {
         item->drawWith(&painter);
     }
+
+    // draw current drawing item
     switch (board->getCurrentDrawingType()) {
         case FigureType::line:
             painter.drawLine(QLine(startPoint, endPoint));
@@ -41,11 +46,6 @@ void BoardView::paintEvent(QPaintEvent *event) {
             painter.drawRect(QRect(startPoint, endPoint));
             break;
         case FigureType::polygon:
-            for (int i=0; i < traces.size()-1; ++i) {
-                painter.drawLine(traces[i], traces[i+1]);
-            }
-            painter.drawLine(startPoint, endPoint);
-            break;
         case FigureType::freeDraw:
             for (int i=0; i < traces.size()-1; ++i) {
                 painter.drawLine(traces[i], traces[i+1]);
@@ -83,6 +83,8 @@ void BoardView::mousePressEvent(QMouseEvent *event) {
     }
 }
 
+// generally, mouse release means that a new figure has been done,
+// add it to board
 void BoardView::mouseReleaseEvent(QMouseEvent *event) {
     if (isDrawing) {
         switch (board->getCurrentDrawingType()) {
@@ -155,16 +157,18 @@ void BoardView::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
+// get the view's corresponding model
 Board * BoardView::getBoard() const {
     return this->board;
 }
 
+// model change, the following two method will be called
+// to update view
 void BoardView::onShownFiguresAmountChange(
         unsigned int currentAmount) {
 
     update();
 }
-
 void BoardView::onDeletedFiguresAmountChange(
         unsigned int currentAmount) {
     update();

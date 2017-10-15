@@ -4,8 +4,14 @@
 #include <vector>
 #include <QtCore/QObject>
 #include "Constants.h"
-#include "model/figures/Figure.h"
+#include "figures/Figure.h"
 
+/* core model of GraffitiBoard
+ * 
+ *     mainly to store the figures created by user
+ *     
+ *     inherit from QObject to use its signal-slots mechanism
+ */
 class Board : public QObject {
 
     Q_OBJECT
@@ -29,8 +35,8 @@ signals:
 
 private:
     FigureType currentDrawingType;
-    std::vector<Figure *>* shownFigures;  // for undo
-    std::vector<Figure *>* deletedFigures; // for redo
+    std::vector<Figure *>* shownFigures;   // figures shown on the boardView
+    std::vector<Figure *>* deletedFigures; // figures delete by click undo
     void moveFigureToShownFigures(Figure *figure);
     void moveFigureToDeletedFigures(Figure *figure);
 };

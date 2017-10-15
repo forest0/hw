@@ -10,8 +10,6 @@ class Rectangle : public Figure, public QRect {
         Rectangle();
         Rectangle(const QPoint &topLeft, 
                 const QPoint &bottomRight);
-        Rectangle(const QPoint & topLeft, const QSize & size);
-        Rectangle(int x, int y, int width, int height);
         ~Rectangle();
         void drawWith(QPainter *painter) const override;
     private:

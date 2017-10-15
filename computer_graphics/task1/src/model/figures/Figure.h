@@ -4,6 +4,8 @@
 #include "Constants.h"
 #include <QtGui/QPainter>
 
+/* figure base type 
+ */
 class Figure {
     public:
         Figure();

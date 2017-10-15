@@ -13,19 +13,6 @@ Rectangle::Rectangle(const QPoint &topLeft,
     type = FigureType::rectangle;
 }
 
-
-Rectangle::Rectangle(const QPoint &topLeft, const QSize &size) :
-    Figure(), QRect(topLeft, size)
-{
-    type = FigureType::rectangle;
-}
-
-Rectangle::Rectangle(int x, int y, int width, int height) :
-    Figure(), QRect(x, y, width, height)
-{
-    type = FigureType::rectangle;
-}
-
 Rectangle::~Rectangle() {
 
 }

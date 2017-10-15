@@ -4,6 +4,8 @@
 #include <string>
 #include "Constants.h"
 
+/* some utility functions
+ */
 class Utils {
     public:
         static std::string getCurrentTimeString();

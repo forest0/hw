@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include "ui_MainWindow.h"
 #include "../tools/Utils.h"
+#include <QtWidgets/QFrame>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -31,13 +32,14 @@ void MainWindow::addActions() {
 
     ui->mainToolBar->addAction(undoAction);
     ui->mainToolBar->addAction(redoAction);
+    // redo and undo is disabled at the beginning
     undoAction->setEnabled(false);
     redoAction->setEnabled(false);
 
 }
 
-// toolbar click event
 void MainWindow::addConnections() {
+    // click one of drawing type action, notify statusbar and board(model) to make response
     connect(this, &MainWindow::drawingTypeChange,
             this, &MainWindow::onDrawingTypeChange);
 
@@ -46,6 +48,7 @@ void MainWindow::addConnections() {
     connect(boardView.getBoard(), &Board::deletedFiguresAmountChange,
             this, &MainWindow::onDeletedFiguresAmountChange);
 
+    // drawing type related action
     connect(lineAction, &QAction::triggered, [this](bool checked) {
         emit drawingTypeChange(FigureType::line);
     });
@@ -62,6 +65,7 @@ void MainWindow::addConnections() {
         emit drawingTypeChange(FigureType::freeDraw);
     });
 
+    // click undo/redo action, notify board(model) to make response
     connect(undoAction, &QAction::triggered, [this](bool checked){
         boardView.getBoard()->popBackFromShownFigures();
     });
@@ -76,16 +80,27 @@ void MainWindow::addActionsAndConnections() {
     addConnections();
 }
 
-// TODO: alignment and style
+// TODO: alignment
 void MainWindow::initStatusBar() {
     fixedLabelOnStatusBar = new QLabel(tr("current drawing: "), this);
     drawingTypeLabelOnStatusBar = new QLabel(this);
+
+    // style
+    fixedLabelOnStatusBar->setFrameStyle(
+            QFrame::Panel | QFrame::Plain);
+    fixedLabelOnStatusBar->setLineWidth(0);
+    drawingTypeLabelOnStatusBar->setFrameStyle(
+            QFrame::Panel | QFrame::Plain);
+    drawingTypeLabelOnStatusBar->setLineWidth(0);
+
+    // set text
     drawingTypeLabelOnStatusBar->setText(
-            Utils::toString(boardView.getBoard()->getCurrentDrawingType()).c_str());
-    ui->statusBar->addPermanentWidget(fixedLabelOnStatusBar);
-    ui->statusBar->addPermanentWidget(drawingTypeLabelOnStatusBar);
+        Utils::toString(boardView.getBoard()->getCurrentDrawingType()).c_str());
     setDrawingTypeLabelText(boardView.getBoard()->getCurrentDrawingType());
 
+    // add to status bar
+    ui->statusBar->addPermanentWidget(fixedLabelOnStatusBar);
+    ui->statusBar->addPermanentWidget(drawingTypeLabelOnStatusBar);
 }
 
 void MainWindow::initWindow() {

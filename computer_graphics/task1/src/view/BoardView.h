@@ -4,6 +4,11 @@
 #include <QtWidgets/QWidget>
 #include "../model/Board.h"
 
+/* core view of GraffitiBoard
+ * 
+ *      responsible for draw figures provided by Board
+ *          and interact with user
+ */
 class BoardView : public QWidget
 {
     Q_OBJECT
@@ -30,7 +35,7 @@ private:
     QPoint endPoint;
     Board *board;
     void resetStartAndEndPoints();
-    QVector<QPoint> traces;
+    QVector<QPoint> traces;         // helper for record user's action
 };
 
 #endif // BOARDVIEW_H

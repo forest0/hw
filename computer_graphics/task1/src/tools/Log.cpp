@@ -23,13 +23,13 @@ static void printLog(const std::string &msgType,
 }
 
 void Log::i(const std::string &msg) {
-    printLog("INFO", msg);
+    printLog("[INFO]", msg);
 }
 
 void Log::w(const std::string &msg) {
-    printLog("WARNING", msg);
+    printLog("[WARNING]", msg);
 }
 
 void Log::e(const std::string &msg) {
-    printLog("ERROR", msg);
+    printLog("[ERROR]", msg);
 }
