@@ -2,9 +2,10 @@
 #include "ui_MainWindow.h"
 #include <QtWidgets/QFileDialog>
 #include "../tools/Log.h"
-#include "../wrapping/Mapper.h"
-#include "../wrapping/IDWMapper.h"
-#include "../wrapping/ImageWrapper.h"
+#include "../warping/Mapper.h"
+#include "../warping/IDWMapper.h"
+#include "../warping/RBFMapper.h"
+#include "../warping/ImageWarper.h"
 #include <QtGui/QRgb>
 #include "../tools/Utils.h"
 
@@ -15,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     initUI();
-    this->setWindowTitle(tr("ImageWrapping"));
+    this->setWindowTitle(tr("Image Warping"));
     this->resize(800,600);
 
     this->setCentralWidget(&imageView);
@@ -23,11 +24,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connectSignalsAndSlots();
 }
 
-MainWindow::~MainWindow()
-{
+MainWindow::~MainWindow() {
     delete rbfAction;
     delete idwAction;
-    delete mirrorAction;
+    // delete mirrorAction;
     delete openAction;
     delete ui;
 }
@@ -43,7 +43,7 @@ void MainWindow::initMainToolBar() {
 
     this->ui->mainToolBar->addSeparator();
 
-    this->ui->mainToolBar->addAction(mirrorAction);
+    // this->ui->mainToolBar->addAction(mirrorAction);
     this->ui->mainToolBar->addAction(idwAction);
     this->ui->mainToolBar->addAction(rbfAction);
 }
@@ -51,7 +51,7 @@ void MainWindow::initMainToolBar() {
 void MainWindow::initActions() {
     this->openAction = new QAction(tr("open"), this);
     this->clearControlPointsAction = new QAction(tr("clear"), this);
-    this->mirrorAction = new QAction(tr("mirror"), this);
+    // this->mirrorAction = new QAction(tr("mirror"), this);
     this->idwAction = new QAction(tr("IDW"), this);
     this->rbfAction = new QAction(tr("RBF"), this);
 
@@ -73,24 +73,29 @@ void MainWindow::onOpenActionTriggered(bool checked) {
     }
 }
 
-void MainWindow::onMirrorActionTriggered(bool checked) {
-    if (imageView.getImage()) {
-
-    }
-
-}
+// void MainWindow::onMirrorActionTriggered(bool checked) {
+//     if (imageView.getImage()) {
+// 
+//     }
+// 
+// }
 
 void MainWindow::onIDWActionTriggered(bool checked) {
     QImage *image = imageView.getImage();
     if (image && imageView.getControlPoints().size()) {
-        Utils::printControlPoints(imageView.getControlPoints());
-        wrapImageAndShowIt(
+        // Utils::printControlPoints(imageView.getControlPoints());
+        warpImageAndShowIt(
                 new IDWMapper(imageView.getControlPoints()));
     }
 }
 
 void MainWindow::onRBFActionTriggered(bool checked) {
-
+    QImage *image = imageView.getImage();
+    if (image && imageView.getControlPoints().size()) {
+        // Utils::printControlPoints(imageView.getControlPoints());
+        warpImageAndShowIt(
+                new RBFMapper(imageView.getControlPoints()));
+    }
 }
 
 void MainWindow::onClearControlPointsActionTriggered(bool checked) {
@@ -105,27 +110,29 @@ void MainWindow::connectSignalsAndSlots() {
             this, &MainWindow::onIDWActionTriggered);
     connect(clearControlPointsAction, &QAction::triggered,
             this, &MainWindow::onClearControlPointsActionTriggered);
+    connect(rbfAction, &QAction::triggered,
+            this, &MainWindow::onRBFActionTriggered);
 }
 
 void MainWindow::updateActionsStatus() {
     if (imageView.getImage()) {
         this->idwAction->setEnabled(true);
         this->rbfAction->setEnabled(true);
-        this->mirrorAction->setEnabled(true);
+        // this->mirrorAction->setEnabled(true);
     } else {
         this->idwAction->setEnabled(false);
         this->rbfAction->setEnabled(false);
-        this->mirrorAction->setEnabled(false);
+        // this->mirrorAction->setEnabled(false);
     }
 }
 
-void MainWindow::wrapImageAndShowIt(Mapper *mapper) {
-    ImageWrapper wrapper(mapper);
-    QImage *wrappedImage = wrapper.wrap(imageView.getImage());
-    ImageView wrappedView(this);
-    wrappedView.setImage(wrappedImage);
-    wrappedView.resize(wrappedImage->size());
-    wrappedView.show();
-    wrappedView.exec();
+void MainWindow::warpImageAndShowIt(Mapper *mapper) {
+    ImageWarper warper(mapper);
+    QImage *warpedImage = warper.warp(imageView.getImage());
+    ImageView warpedView(this);
+    warpedView.setImage(warpedImage);
+    warpedView.resize(warpedImage->size());
+    warpedView.show();
+    warpedView.exec();
 
 }

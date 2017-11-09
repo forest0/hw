@@ -3,10 +3,14 @@
 
 #include <QtGui/QImage>
 #include "tools/Utils.h"
-#include "wrapping/Mapper.h"
-#include "wrapping/IDWMapper.h"
+#include "warping/Mapper.h"
+#include "warping/IDWMapper.h"
 #include <iostream>
 
+#include "warping/Eigen/Dense"
+
+using std::cout;
+using std::endl;
 
 void test() {
     // QImage *image = new QImage("../../../data/grid.bmp");
@@ -14,9 +18,13 @@ void test() {
     // Mapper *mapper = new IDWMapper(Utils::getControlPoints());
     // std::cout << mapper->map(QPoint(25,233)).y() << std::endl;
     
-    ImageView view;
-    view.show();
-    view.exec();
+    Eigen::Matrix2f A, b;
+   A << 2, -1, -1, 3;
+   b << 1, 2, 3, 1;
+   cout << "Here is the matrix A:\n" << A << endl;
+   cout << "Here is the right hand side b:\n" << b << endl;
+   Eigen::Matrix2f x = A.ldlt().solve(b);
+   cout << "The solution is:\n" << x << endl;
 
 }
 

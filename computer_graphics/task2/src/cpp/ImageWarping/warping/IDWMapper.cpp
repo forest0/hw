@@ -60,6 +60,9 @@ double IDWMapper::distance(const QPoint &p, const QPoint &pi) const {
         (p.x()-pi.x())*(p.x()-pi.x()) + (p.y()-pi.y())*(p.y()-pi.y()));
 }
 
+/* 
+ * tex: $f_i(p) = q_i + D_i(p-p_i)$, here just let D_i to eye(2)
+ */
 QPoint IDWMapper::fi_func(const QPoint &p, int idx) const {
     double x = tailOfControlPoints[idx].x();
     double y = tailOfControlPoints[idx].y();

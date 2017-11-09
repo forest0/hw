@@ -13,6 +13,7 @@ ImageView::ImageView(QWidget *parent)
 ImageView::~ImageView() {
     if (image) {
         delete image;
+        image = nullptr;
     }
 }
 
@@ -32,9 +33,9 @@ void ImageView::paintEvent(QPaintEvent *event) {
     painter.setPen(pen);
     if (this->image) {
         painter.drawImage(getCenterPoint(), *(this->image));
+        painter.drawLine(startPoint, endPoint); // draw current controlPoints
+        drawControlPoints(&painter); // draw previous controlPoints
     }
-    painter.drawLine(startPoint, endPoint); // draw current controlPoints
-    drawControlPoints(&painter); // draw previous controlPoints
 }
 
 void ImageView::mouseMoveEvent(QMouseEvent *event) {
@@ -50,9 +51,11 @@ void ImageView::mouseReleaseEvent(QMouseEvent *event) {
             isDrawing = false;
             endPoint = event->pos();
             update();
-            addControlPointPair(
-                std::make_pair(startPoint-getCenterPoint(),
-                    endPoint-getCenterPoint()));
+            if (this->image) {
+                addControlPointPair(
+                    std::make_pair(startPoint-getCenterPoint(),
+                        endPoint-getCenterPoint()));
+            }
             resetStartAndEndPoints();
         }
     }
@@ -84,8 +87,10 @@ std::vector<std::pair<QPoint, QPoint>> ImageView::getControlPoints() const {
 
 void ImageView::drawControlPoints(QPainter *painter) {
     for (const auto &pair : controlPoints) {
-        painter->drawLine(pair.first+getCenterPoint(),
+        if ((pair.second.x() >= 0) && (pair.second.y() >= 0)) {
+            painter->drawLine(pair.first+getCenterPoint(),
                 pair.second+getCenterPoint());
+        }
     }
 }
 

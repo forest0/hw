@@ -4,7 +4,7 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QAction>
 #include "ImageView.h"
-#include "../wrapping/Mapper.h"
+#include "../warping/Mapper.h"
 
 namespace Ui {
 class MainWindow;
@@ -19,7 +19,7 @@ class MainWindow : public QMainWindow {
 
     private slots:
         void onOpenActionTriggered(bool checked);
-        void onMirrorActionTriggered(bool checked);
+        // void onMirrorActionTriggered(bool checked);
         void onIDWActionTriggered(bool checked);
         void onRBFActionTriggered(bool checked);
         void onClearControlPointsActionTriggered(bool checked);
@@ -30,7 +30,7 @@ class MainWindow : public QMainWindow {
         void initActions();
         void connectSignalsAndSlots();
         void updateActionsStatus();
-        void wrapImageAndShowIt(Mapper *mapper);
+        void warpImageAndShowIt(Mapper *mapper);
 
     private:
         Ui::MainWindow *ui;
@@ -38,7 +38,7 @@ class MainWindow : public QMainWindow {
 
         QAction *openAction;
         QAction *clearControlPointsAction;
-        QAction *mirrorAction;
+        // QAction *mirrorAction;
         QAction *idwAction;
         QAction *rbfAction;
 

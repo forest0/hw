@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = ImageWrapping
+TARGET = Imagewarping
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -28,18 +28,20 @@ SOURCES += \
     main.cpp \
     view/ImageView.cpp \
     view/MainWindow.cpp \
-    wrapping/ImageWrapper.cpp \
-    wrapping/Mapper.cpp \
-    wrapping/IDWMapper.cpp \
+    warping/ImageWarper.cpp \
+    warping/Mapper.cpp \
+    warping/IDWMapper.cpp \
+    warping/RBFMapper.cpp \
     tools/Log.cpp \
     tools/Utils.cpp
 
 HEADERS += \
     view/ImageView.h \
     view/MainWindow.h \
-    wrapping/ImageWrapper.h \
-    wrapping/Mapper.h \
-    wrapping/IDWMapper.h \
+    warping/ImageWarper.h \
+    warping/Mapper.h \
+    warping/IDWMapper.h \
+    warping/RBFMapper.h \
     tools/Log.h \
     tools/Utils.h
 
