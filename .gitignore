@@ -9,6 +9,7 @@
 
 # Deep Learning
 deep_learning/task1/pictures
+deep_learning/task2
 
 
 # Computer Graphics
@@ -27,3 +28,5 @@ computer_graphics/task2/src/cpp/ImageWarping/.ycm_extra_conf.py
 computer_graphics/task2/src/cpp/ImageWarping/ImageWarping.pro.user
 computer_graphics/task2/src/cpp/ImageWarping/MainWindow.ui
 computer_graphics/task2/src/cpp/ImageWarping/warping/Eigen
+
+computer_graphics/task3
