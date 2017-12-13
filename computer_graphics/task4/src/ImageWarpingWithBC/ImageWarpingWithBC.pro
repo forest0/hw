@@ -22,13 +22,27 @@ TEMPLATE = app
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
+CONFIG  += c++11
+
+# to use triangle library
+#       1. build triangle.o with the following command(*some options may need to change according to your project*):
+#            g++ -O -DLINUX -I/usr/X11R6/include -L/usr/X11R6/lib -DTRILIBRARY \
+#                 -c -o ./triangle.o -m64 -pipe -g -std=c++0x -Wall -W -D_REENTRANT \
+#                 -DANSI_DECLARATORS -fPIE ./triangle.c
+#       2. copy the generated triangle.o in step 1 to where your objective files locate
+#       3. add the following two lines to the qt project's pro file(this file)
+DEFINES += ANSI_DECLARATORS REAL=double VOID=void
+LIBS += triangle.o
 
 SOURCES += \
         main.cpp \
-        view/MainWindow.cpp
+        view/MainWindow.cpp \
+        view/ImageView.cpp
 
 HEADERS += \
-        view/MainWindow.h
+        view/MainWindow.h \
+        view/ImageView.h \
+        libs/triangle/triangle.h
 
 FORMS += \
         view/MainWindow.ui
