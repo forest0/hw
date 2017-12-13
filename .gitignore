@@ -4,8 +4,13 @@
 *.docx
 *.png
 
-# vim swap file
+# vim file
 *.swp
+.ycm_extra_conf.py
+
+# Qt
+*.pro.user
+*.ui
 
 # Deep Learning
 deep_learning/task1/pictures
@@ -16,7 +21,7 @@ deep_learning/task3
 # Computer Graphics
 computer_graphics/task1/doc/demo
 computer_graphics/task1/bin
-computer_graphics/task1/src/GraffitiBoard.pro.user
+# computer_graphics/task1/src/GraffitiBoard.pro.user
 computer_graphics/task1/src/resources
 computer_graphics/task1/pub
 
@@ -25,9 +30,14 @@ computer_graphics/task2/doc
 computer_graphics/task2/pub
 computer_graphics/task2/src/py
 computer_graphics/task2/src/cpp/bin
-computer_graphics/task2/src/cpp/ImageWarping/.ycm_extra_conf.py
-computer_graphics/task2/src/cpp/ImageWarping/ImageWarping.pro.user
-computer_graphics/task2/src/cpp/ImageWarping/MainWindow.ui
+# computer_graphics/task2/src/cpp/ImageWarping/.ycm_extra_conf.py
+# computer_graphics/task2/src/cpp/ImageWarping/ImageWarping.pro.user
+# computer_graphics/task2/src/cpp/ImageWarping/MainWindow.ui
 computer_graphics/task2/src/cpp/ImageWarping/warping/Eigen
 
 computer_graphics/task3
+
+computer_graphics/task4/data
+computer_graphics/task4/doc
+computer_graphics/task4/pub
+computer_graphics/task4/src/bin
