@@ -31,18 +31,29 @@ CONFIG  += c++11
 #                 -DANSI_DECLARATORS -fPIE ./triangle.c
 #       2. copy the generated triangle.o in step 1 to where your objective files locate
 #       3. add the following two lines to the qt project's pro file(this file)
-DEFINES += ANSI_DECLARATORS REAL=double VOID=void
-LIBS += triangle.o
+# DEFINES += ANSI_DECLARATORS REAL=double VOID=void
+# LIBS += triangle.o
+
+LIBS += -lopencv_imgproc
 
 SOURCES += \
         main.cpp \
         view/MainWindow.cpp \
-        view/ImageView.cpp
+        view/ImageView.cpp \
+        core/Triangle.cpp \
+        core/coordinates/BarycentricCoordinate.cpp \
+        core/coordinates/WachspressCoordinate.cpp \
+        utils/Utils.cpp
 
 HEADERS += \
         view/MainWindow.h \
         view/ImageView.h \
-        libs/triangle/triangle.h
+        core/Triangle.h \
+        core/coordinates/BarycentricCoordinate.h \
+        core/coordinates/WachspressCoordinate.h \
+        utils/Utils.h \
+        utils/Constants.h
+#        libs/triangle/triangle.h
 
 FORMS += \
         view/MainWindow.ui
