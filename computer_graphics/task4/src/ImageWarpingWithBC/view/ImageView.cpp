@@ -9,7 +9,8 @@ ImageView::ImageView(QWidget *parent) : QWidget(parent),
     startPoint(), endPoint(),
     drawingState(ImageView::DrawingState::DRAW),
     vertices(), traces(), isDrawing(false), cageIsDrawn(false),
-    chosenPointIndex(-1)
+    chosenPointIndex(-1), 
+    dragStart(0,0), dragEnd(0,0)
 {
 
 }
@@ -86,6 +87,7 @@ void ImageView::mousePressEvent(QMouseEvent * event) {
                     this->setMouseTracking(true);
                     isDrawing = true;
                     startPoint = endPoint = event->pos();
+                    dragStart = startPoint;
                     chosenPointIndex = 
                         getChosenPointIndex(endPoint);
                 }
@@ -121,6 +123,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent * event) {
                     traces[chosenPointIndex] = event->pos();
                 }
                 isDrawing = false;
+                dragEnd = event->pos();
                 this->setMouseTracking(false);
                 resetStartAndEndPoints();
                 update();
@@ -152,9 +155,22 @@ void ImageView::mouseMoveEvent(QMouseEvent * event) {
 }
 
 void ImageView::setImage(QImage * image) {
-    this->image = image;
-    imageBak = new QImage();
-    *imageBak = image->copy(0,0,image->width(), image->height());
+    if (this->image != image) {
+        if (this->image) {
+            delete this->image;
+            this->image = nullptr;
+        }
+        this->image = image;
+
+        if (this->imageBak) {
+            delete this->imageBak;
+            this->imageBak = nullptr;
+        }
+        imageBak = new QImage();
+        *imageBak = image->copy(0, 0, image->width(), 
+                image->height());
+
+    }
 }
 
 QPoint ImageView::getCenterPoint() const {

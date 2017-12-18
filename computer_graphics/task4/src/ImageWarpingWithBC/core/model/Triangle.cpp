@@ -1,6 +1,6 @@
 #include "Triangle.h"
-#include "../utils/Constants.h"
-#include "../utils/Utils.h"
+#include "../../utils/Constants.h"
+#include "../../utils/Utils.h"
 #include <iostream>
 #include <cassert>
 

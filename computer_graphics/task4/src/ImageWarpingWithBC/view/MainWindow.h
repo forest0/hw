@@ -19,8 +19,7 @@ public:
 
 private slots:
     void onOpenActionTriggered(bool checked);
-    void onDrawCageActionTriggered(bool checked);
-    void onDragCageActionTriggered(bool checked);
+    void onDebugActionTriggered(bool checked);
 
 private:
     void initUI();
@@ -34,8 +33,7 @@ private:
     ImageView imageView;
 
     QAction *openAction;
-    QAction *drawCageAction;
-    QAction *dragCageAction;
+    QAction *debugAction;
 
     QString imageFilePath;
 

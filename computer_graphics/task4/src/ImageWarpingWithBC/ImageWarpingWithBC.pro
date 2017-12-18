@@ -40,17 +40,19 @@ SOURCES += \
         main.cpp \
         view/MainWindow.cpp \
         view/ImageView.cpp \
-        core/Triangle.cpp \
+        core/model/Triangle.cpp \
         core/coordinates/BarycentricCoordinate.cpp \
         core/coordinates/WachspressCoordinate.cpp \
+        core/warp/ImageWarpper.cpp \
         utils/Utils.cpp
 
 HEADERS += \
         view/MainWindow.h \
         view/ImageView.h \
-        core/Triangle.h \
+        core/model/Triangle.h \
         core/coordinates/BarycentricCoordinate.h \
         core/coordinates/WachspressCoordinate.h \
+        core/warp/ImageWarpper.h \
         utils/Utils.h \
         utils/Constants.h
 #        libs/triangle/triangle.h

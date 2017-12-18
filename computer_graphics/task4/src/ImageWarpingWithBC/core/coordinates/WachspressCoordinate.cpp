@@ -1,5 +1,5 @@
 #include "WachspressCoordinate.h"
-#include "../Triangle.h"
+#include "../model/Triangle.h"
 #include "../../utils/Utils.h"
 #include "../../utils/Constants.h"
 #include <QtCore/QtDebug>

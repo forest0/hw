@@ -53,6 +53,9 @@ private:
     const int INVALID_INDEX = -1;
 
     int chosenPointIndex;
+
+    QPoint dragStart;
+    QPoint dragEnd;
 };
 
 #endif // IMAGEVIEW_H

@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 }
 
 
-#include "core/Triangle.h"
+#include "core/model/Triangle.h"
 #include <QtCore/QDebug>
 #include <iostream>
 #include "core/coordinates/BarycentricCoordinate.h"

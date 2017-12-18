@@ -2,6 +2,13 @@
 #include "ui_MainWindow.h"
 #include <QtCore/QDebug>
 #include <QtWidgets/QFileDialog>
+#include "../utils/Utils.h"
+#include <iostream>
+
+#include <QtGui/QPainter>
+#include "../core/model/Triangle.h"
+#include <opencv2/core.hpp>
+#include <opencv2/imgproc.hpp>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -24,6 +31,11 @@ MainWindow::~MainWindow()
         delete openAction;
         openAction = nullptr;
     }
+
+    if (this->debugAction) {
+        delete debugAction;
+        debugAction = nullptr;
+    }
 }
 void MainWindow::initUI() {
     initActions();
@@ -33,24 +45,19 @@ void MainWindow::initUI() {
 void MainWindow::initMainToolBar() {
     this->ui->mainToolBar->addAction(openAction);
     this->ui->mainToolBar->addSeparator();
-    this->ui->mainToolBar->addAction(drawCageAction);
-    this->ui->mainToolBar->addSeparator();
-    this->ui->mainToolBar->addAction(dragCageAction);
+    this->ui->mainToolBar->addAction(debugAction);
 }
 
 void MainWindow::initActions() {
     this->openAction = new QAction(tr("open"), this);
-    this->drawCageAction = new QAction(tr("draw cage"), this);
-    this->dragCageAction = new QAction(tr("drag cage"), this);
+    this->debugAction = new QAction(tr("debug"), this);
 }
 
 void MainWindow::connectSignalsAndSlots() {
     connect(openAction, &QAction::triggered,
             this, &MainWindow::onOpenActionTriggered);
-    connect(drawCageAction, &QAction::triggered,
-            this, &MainWindow::onDrawCageActionTriggered);
-    connect(dragCageAction, &QAction::triggered,
-            this, &MainWindow::onDragCageActionTriggered);
+    connect(debugAction, &QAction::triggered,
+            this, &MainWindow::onDebugActionTriggered);
 }
 
 void MainWindow::onOpenActionTriggered(bool checked) {
@@ -66,11 +73,5 @@ void MainWindow::onOpenActionTriggered(bool checked) {
     }
 }
 
-void MainWindow::onDrawCageActionTriggered(bool checked) {
-    qDebug() << "draw";
+void MainWindow::onDebugActionTriggered(bool checked) {
 }
-
-void MainWindow::onDragCageActionTriggered(bool checked) {
-    qDebug() << "drag";
-}
-

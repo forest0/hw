@@ -3,6 +3,7 @@
 
 #include <QtCore/QPointF>
 #include <opencv2/core.hpp>
+#include <vector>
 
 class Utils {
 
@@ -15,10 +16,12 @@ public:
 
     static bool isOnSameLine(const QPointF &point1, 
             const QPointF &point2, const QPointF &point3);
-    
+
+    static std::vector<double> getRandomBC(int dimension);
+
 
 private:
-    
+    static void initSeed();
 };
 
 #endif /* UTILS_H */
