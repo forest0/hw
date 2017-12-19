@@ -79,6 +79,8 @@ void ImageWarpper::warp(int index, const QPoint & delta) {
 
     delete *image;
     *image = warppedImage;
+    delete beforeBC;
+    delete afterBC;
 }
 
 ImageWarpper::~ImageWarpper() {
