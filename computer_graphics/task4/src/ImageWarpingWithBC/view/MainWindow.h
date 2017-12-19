@@ -19,7 +19,7 @@ public:
 
 private slots:
     void onOpenActionTriggered(bool checked);
-    void onDebugActionTriggered(bool checked);
+    // void onDebugActionTriggered(bool checked);
 
 private:
     void initUI();
@@ -33,7 +33,7 @@ private:
     ImageView imageView;
 
     QAction *openAction;
-    QAction *debugAction;
+    // QAction *debugAction;
 
     QString imageFilePath;
 

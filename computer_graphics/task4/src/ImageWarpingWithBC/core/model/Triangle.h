@@ -19,11 +19,12 @@ public:
     bool hasEdgePass(const QPointF &point) const;
     virtual ~Triangle();
 
-private:
+public:
     cv::Point2f point1;
     cv::Point2f point2;
     cv::Point2f point3;
 
+private:
     /* calculate the integer points within a triangle which 
      * has a edge with undefined slope
      * 

@@ -12,6 +12,8 @@ public:
     explicit ImageView(QWidget *parent = nullptr);
     virtual ~ImageView();
     void setImage(QImage *image);
+    QImage *getImage();
+    std::vector<QPoint> getVertices();
 
     enum class DrawingState {
         DRAW,
@@ -44,7 +46,8 @@ private:
     DrawingState drawingState;
 
     std::vector<QPoint> vertices;
-    std::vector<QPoint> traces;
+    // std::vector<QPoint> traces;
+
 
     bool isDrawing;
     bool cageIsDrawn;

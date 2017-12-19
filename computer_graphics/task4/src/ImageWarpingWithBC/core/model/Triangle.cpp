@@ -150,13 +150,13 @@ std::vector<QPoint> Triangle::getInternalIntegerPoints(int idx)
     std::vector<QPoint> result;
 
     int leftBound  = std::ceil(orderedPoints[0].x);
-    if ((leftBound - orderedPoints[0].x) < Constants::EPSILON) {
-        leftBound = std::floor(orderedPoints[0].x+1);
-    }
+    // if ((leftBound - orderedPoints[0].x) < Constants::EPSILON) {
+    //     leftBound = std::floor(orderedPoints[0].x+1);
+    // }
     int rightBound = std::floor(orderedPoints[2].x);
-    if ((orderedPoints[2].x - rightBound) < Constants::EPSILON) {
-        rightBound = std::ceil(orderedPoints[2].x-1);
-    }
+    // if ((orderedPoints[2].x - rightBound) < Constants::EPSILON) {
+    //     rightBound = std::ceil(orderedPoints[2].x-1);
+    // }
 
     float k[2] = {0.0f, 0.0f};
     float b[2] = {0.0f, 0.0f};
@@ -186,20 +186,23 @@ std::vector<QPoint> Triangle::getInternalIntegerPoints(int idx)
             continue;
         }
         
-        for (int y = lowerBound+1; y < upperBound; ++y) {
+        // for (int y = lowerBound+1; y < upperBound; ++y) {
+        //     result.push_back(QPoint(x, y));
+        // }
+        for (int y = lowerBound; y <= upperBound; ++y) {
             result.push_back(QPoint(x, y));
         }
 
-        QPoint lowerPoint(x, lowerBound);
-        if (!(this->hasEdgePass(lowerPoint))) {
-            result.push_back(lowerPoint);
-        }
-        if (upperBound > lowerBound) {
-            QPoint upperPoint(x, upperBound);
-            if (!(this->hasEdgePass(upperPoint))) {
-                result.push_back(upperPoint);
-            }
-        }
+        // QPoint lowerPoint(x, lowerBound);
+        // if (!(this->hasEdgePass(lowerPoint))) {
+        //     result.push_back(lowerPoint);
+        // }
+        // if (upperBound > lowerBound) {
+        //     QPoint upperPoint(x, upperBound);
+        //     if (!(this->hasEdgePass(upperPoint))) {
+        //         result.push_back(upperPoint);
+        //     }
+        // }
 
     }
 

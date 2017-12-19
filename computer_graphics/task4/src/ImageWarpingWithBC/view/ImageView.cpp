@@ -3,12 +3,13 @@
 #include <QtCore/QPointF>
 #include <QtGui/QMouseEvent>
 #include <QtCore/QDebug>
+#include "../core/warp/ImageWarpper.h"
 
 ImageView::ImageView(QWidget *parent) : QWidget(parent),
     image(nullptr), imageBak(nullptr),
     startPoint(), endPoint(),
     drawingState(ImageView::DrawingState::DRAW),
-    vertices(), traces(), isDrawing(false), cageIsDrawn(false),
+    vertices(), isDrawing(false), cageIsDrawn(false),
     chosenPointIndex(-1), 
     dragStart(0,0), dragEnd(0,0)
 {
@@ -32,19 +33,19 @@ void ImageView::paintEvent(QPaintEvent * event) {
     pen.setColor(QColor(255,0,0));
     pen.setWidth(4);
     if (this->image) {
-        painter.drawImage(getCenterPoint(), *(this->image));
+        painter.drawImage(0, 0, *(this->image));
     }
     switch (getCurrentDrawingState()) {
         case ImageView::DrawingState::DRAW:
-            if (!traces.empty()) {
+            if (!vertices.empty()) {
                 for (unsigned int i = 0; 
-                        i < (traces.size()-1); ++i) {
+                        i < (vertices.size()-1); ++i) {
 
-                    painter.drawLine(traces[i], traces[i+1]);
+                    painter.drawLine(vertices[i], vertices[i+1]);
                 }
                 if (cageIsDrawn) {
-                    painter.drawLine(traces.back(), 
-                            traces.front());
+                    painter.drawLine(vertices.back(), 
+                            vertices.front());
                 }
 
             }
@@ -55,14 +56,14 @@ void ImageView::paintEvent(QPaintEvent * event) {
         case ImageView::DrawingState::DRAG:
             if (cageIsDrawn) {
                  for (unsigned int i = 0; 
-                        i < (traces.size()-1); ++i) {
-                    painter.drawLine(traces[i], traces[i+1]);
-                    painter.drawEllipse(traces[i], VERTEX_RADIUS, 
+                        i < (vertices.size()-1); ++i) {
+                    painter.drawLine(vertices[i], vertices[i+1]);
+                    painter.drawEllipse(vertices[i], VERTEX_RADIUS, 
                             VERTEX_RADIUS);
                 }
-                painter.drawLine(traces.back(), 
-                        traces.front());
-                painter.drawEllipse(traces.back(), VERTEX_RADIUS, 
+                painter.drawLine(vertices.back(), 
+                        vertices.front());
+                painter.drawEllipse(vertices.back(), VERTEX_RADIUS, 
                         VERTEX_RADIUS);
 
             }
@@ -105,7 +106,7 @@ void ImageView::mouseReleaseEvent(QMouseEvent * event) {
                     if (Qt::LeftButton == event->button()) {
                         startPoint = endPoint;
                         endPoint = event->pos();
-                        traces.push_back(endPoint);
+                        vertices.push_back(endPoint);
                     } else if (Qt::RightButton == event->button()) {
                         isDrawing = false;
                         cageIsDrawn = true;
@@ -120,10 +121,13 @@ void ImageView::mouseReleaseEvent(QMouseEvent * event) {
                 break;
             case ImageView::DrawingState::DRAG:
                 if (chosenPointIndex != INVALID_INDEX) {
-                    traces[chosenPointIndex] = event->pos();
+                    vertices[chosenPointIndex] = event->pos();
+                    dragEnd = event->pos();
+                    ImageWarpper warpper(&image, vertices);
+                    warpper.warp(chosenPointIndex, 
+                            dragEnd-dragStart);
                 }
                 isDrawing = false;
-                dragEnd = event->pos();
                 this->setMouseTracking(false);
                 resetStartAndEndPoints();
                 update();
@@ -146,7 +150,7 @@ void ImageView::mouseMoveEvent(QMouseEvent * event) {
                 chosenPointIndex = getChosenPointIndex(
                         event->pos());
                 if (chosenPointIndex != INVALID_INDEX) {
-                    traces[chosenPointIndex] = event->pos();
+                    vertices[chosenPointIndex] = event->pos();
                 }
                 update();
                 break;
@@ -190,14 +194,22 @@ void ImageView::resetStartAndEndPoints() {
 }
 
 int ImageView::getChosenPointIndex(const QPoint &point) const {
-    for (unsigned int i = 0; i < traces.size(); ++i) {
+    for (unsigned int i = 0; i < vertices.size(); ++i) {
         int squaredDistance = 
-            (point.x()-traces[i].x())*(point.x()-traces[i].x()) 
-            + (point.y()-traces[i].y())*(point.y()-traces[i].y());
+            (point.x()-vertices[i].x())*(point.x()-vertices[i].x()) 
+            + (point.y()-vertices[i].y())*(point.y()-vertices[i].y());
         if (squaredDistance < VERTEX_RADIUS*VERTEX_RADIUS) {
             return i;
         }
     }
     return INVALID_INDEX;
+}
+
+std::vector<QPoint> ImageView::getVertices() {
+    return this->vertices;
+}
+
+QImage * ImageView::getImage() {
+    return this->image;
 }
 

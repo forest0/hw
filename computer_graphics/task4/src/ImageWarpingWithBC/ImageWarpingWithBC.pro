@@ -34,7 +34,7 @@ CONFIG  += c++11
 # DEFINES += ANSI_DECLARATORS REAL=double VOID=void
 # LIBS += triangle.o
 
-LIBS += -lopencv_imgproc
+LIBS += -lopencv_imgproc -lopencv_core
 
 SOURCES += \
         main.cpp \
@@ -43,6 +43,8 @@ SOURCES += \
         core/model/Triangle.cpp \
         core/coordinates/BarycentricCoordinate.cpp \
         core/coordinates/WachspressCoordinate.cpp \
+        core/coordinates/MeanValueCoordinate.cpp \
+        core/coordinates/DiscreteHarmonicCoordinate.cpp \
         core/warp/ImageWarpper.cpp \
         utils/Utils.cpp
 
@@ -52,10 +54,12 @@ HEADERS += \
         core/model/Triangle.h \
         core/coordinates/BarycentricCoordinate.h \
         core/coordinates/WachspressCoordinate.h \
+        core/coordinates/MeanValueCoordinate.h \
+        core/coordinates/DiscreteHarmonicCoordinate.h \
         core/warp/ImageWarpper.h \
         utils/Utils.h \
         utils/Constants.h
 #        libs/triangle/triangle.h
 
 FORMS += \
-        view/MainWindow.ui
+#        view/MainWindow.ui

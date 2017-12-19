@@ -9,6 +9,7 @@
 #include "../core/model/Triangle.h"
 #include <opencv2/core.hpp>
 #include <opencv2/imgproc.hpp>
+#include "../core/warp/ImageWarpper.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -32,10 +33,10 @@ MainWindow::~MainWindow()
         openAction = nullptr;
     }
 
-    if (this->debugAction) {
-        delete debugAction;
-        debugAction = nullptr;
-    }
+    // if (this->debugAction) {
+    //     delete debugAction;
+    //     debugAction = nullptr;
+    // }
 }
 void MainWindow::initUI() {
     initActions();
@@ -45,19 +46,19 @@ void MainWindow::initUI() {
 void MainWindow::initMainToolBar() {
     this->ui->mainToolBar->addAction(openAction);
     this->ui->mainToolBar->addSeparator();
-    this->ui->mainToolBar->addAction(debugAction);
+    // this->ui->mainToolBar->addAction(debugAction);
 }
 
 void MainWindow::initActions() {
     this->openAction = new QAction(tr("open"), this);
-    this->debugAction = new QAction(tr("debug"), this);
+    // this->debugAction = new QAction(tr("debug"), this);
 }
 
 void MainWindow::connectSignalsAndSlots() {
     connect(openAction, &QAction::triggered,
             this, &MainWindow::onOpenActionTriggered);
-    connect(debugAction, &QAction::triggered,
-            this, &MainWindow::onDebugActionTriggered);
+    // connect(debugAction, &QAction::triggered,
+    //         this, &MainWindow::onDebugActionTriggered);
 }
 
 void MainWindow::onOpenActionTriggered(bool checked) {
@@ -73,5 +74,5 @@ void MainWindow::onOpenActionTriggered(bool checked) {
     }
 }
 
-void MainWindow::onDebugActionTriggered(bool checked) {
-}
+// void MainWindow::onDebugActionTriggered(bool checked) {
+// }
