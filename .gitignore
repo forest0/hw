@@ -44,3 +44,9 @@ computer_graphics/task4/src/bin
 
 # add some options to let ycm work with triangle
 !computer_graphics/task4/src/.ycm_extra_conf.py
+
+computer_graphics/task5/data
+computer_graphics/task5/doc
+computer_graphics/task5/pub
+computer_graphics/task5/bin
+computer_graphics/task5/src/bin
