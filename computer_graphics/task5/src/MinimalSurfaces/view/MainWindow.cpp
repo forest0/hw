@@ -85,6 +85,16 @@ void MainWindow::CreateActions()
             renderingwidget_, SLOT(LoadTexture()));
     connect(action_background_, SIGNAL(triggered()),
             renderingwidget_, SLOT(SetBackground()));
+
+    action_local_  = new QAction(tr("local"),  this);
+    action_global_ = new QAction(tr("global"), this);
+
+    connect(action_local_, SIGNAL(triggered()),
+            renderingwidget_, SLOT(GenerateMinimalSurfaceByLocal()));
+    connect(action_global_, SIGNAL(triggered()),
+            renderingwidget_, 
+            SLOT(GenerateMinimalSurfaceByGlobal()));
+
 }
 
 void MainWindow::CreateMenus()
@@ -108,6 +118,11 @@ void MainWindow::CreateToolBars()
     toolbar_basic_->addAction(action_loadmesh_);
     toolbar_basic_->addAction(action_loadtexture_);
     toolbar_basic_->addAction(action_background_);
+
+    toolbar_minimal_surface_ = addToolBar(tr("Minimal Surface"));
+    toolbar_minimal_surface_->addAction(action_local_);
+    toolbar_minimal_surface_->addAction(action_global_);
+
 }
 
 void MainWindow::CreateStatusBar()

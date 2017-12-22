@@ -57,6 +57,11 @@ private:
     QAction                * action_loadtexture_;
     QAction                * action_background_;
 
+    // minimal surfaces
+    QToolBar               * toolbar_minimal_surface_;
+    QAction                * action_local_;
+    QAction                * action_global_;
+
     // Render RadioButtons
     QCheckBox              * checkbox_point_;
     QCheckBox              * checkbox_edge_;

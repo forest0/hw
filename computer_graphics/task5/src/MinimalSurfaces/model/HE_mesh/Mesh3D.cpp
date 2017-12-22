@@ -248,7 +248,7 @@ bool Mesh3D::LoadFromOBJFile(const char* fins)
             }
         }
 
-        //read facets
+        //read faces
         fseek(pfile, 0, SEEK_SET);
 
         while(fgets(pLine, 512, pfile))

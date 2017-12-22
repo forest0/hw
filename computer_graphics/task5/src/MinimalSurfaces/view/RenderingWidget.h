@@ -3,7 +3,7 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QtCore/QEvent>
-#include "../HE_mesh/Vec.h"
+#include "../model/HE_mesh/Vec.h"
 
 using trimesh::vec;
 using trimesh::point;
@@ -45,11 +45,14 @@ private:
     void Render();
     void SetLight();
 
-    public slots:
+public slots:
     void SetBackground();
     void ReadMesh();
     void WriteMesh();
     void LoadTexture();
+
+    void GenerateMinimalSurfaceByLocal();
+    void GenerateMinimalSurfaceByGlobal();
 
     void CheckDrawPoint(bool bv);
     void CheckDrawEdge(bool bv);

@@ -10,9 +10,12 @@
 #include <GL/glut.h>
 #include <algorithm>
 #include "MainWindow.h"
-#include "../ArcBall.h"
+#include "../model/ArcBall.h"
 #include "../GlobalFunctions.h"
-#include "../HE_mesh/Mesh3D.h"
+#include "../model/HE_mesh/Mesh3D.h"
+#include "../libs/Eigen/SparseLU"
+#include "../libs/Eigen/Sparse"
+#include "../libs/Eigen/Dense"
 
 RenderingWidget::RenderingWidget(QWidget *parent, 
         MainWindow* mainwindow)
@@ -257,7 +260,7 @@ void RenderingWidget::ReadMesh()
         emit(operatorInfo(QString("Read Mesh Failed!")));
         return;
     }
-    //ÖÐÎÄÂ·¾¶Ö§³Ö
+    //ä¸­æ–‡è·¯å¾„æ”¯æŒ
     QTextCodec *code = QTextCodec::codecForName("gd18030");
     QTextCodec::setCodecForLocale(code);
 
@@ -500,7 +503,7 @@ void RenderingWidget::DrawTexture(bool bv)
     if (ptr_mesh_->num_of_face_list() == 0 || !is_load_texture_)
         return;
 
-    //Ä¬ÈÏÊ¹ÓÃÇòÃæÎÆÀíÓ³Éä£¬Ð§¹û²»ºÃ
+    //é»˜è®¤ä½¿ç”¨çƒé¢çº¹ç†æ˜ å°„ï¼Œæ•ˆæžœä¸å¥½
     ptr_mesh_->SphereTex();
 
     const std::vector<HE_face *>& faces = 
@@ -513,7 +516,7 @@ void RenderingWidget::DrawTexture(bool bv)
         HE_edge *pedge(faces.at(i)->pedge_);
         do
         {
-            /*ÇëÔÚ´Ë´¦»æÖÆÎÆÀí£¬Ìí¼ÓÎÆÀí×ø±ê¼´¿É*/
+            /*è¯·åœ¨æ­¤å¤„ç»˜åˆ¶çº¹ç†ï¼Œæ·»åŠ çº¹ç†åæ ‡å³å¯*/
             glTexCoord2fv(pedge->pvert_->texCoord_.data());
             glNormal3fv(pedge->pvert_->normal().data());
             glVertex3fv(pedge->pvert_->position().data());
@@ -525,3 +528,82 @@ void RenderingWidget::DrawTexture(bool bv)
 
     glEnd();
 }
+
+void RenderingWidget::GenerateMinimalSurfaceByLocal() {
+    const int verticesTotalAmount = ptr_mesh_->num_of_vertex_list();
+    if (!verticesTotalAmount) {
+        std::cerr << 
+            "no valid mesh data, so no minimal surface generated"
+            << std::endl;
+        return;
+    }
+    Eigen::SparseMatrix<float> A(verticesTotalAmount, 
+            verticesTotalAmount);
+    Eigen::MatrixX3f b = Eigen::MatrixX3f::Zero(
+            verticesTotalAmount, 3);
+    Eigen::MatrixX3f x;
+
+    // find the max amount of neighbor for a vertex
+    unsigned int maxNeighborAmount = 0;
+    for (const auto &vert : *(ptr_mesh_->get_vertex_list())) {
+
+        if (vert->neighborIdx.size() > maxNeighborAmount) {
+            maxNeighborAmount = vert->neighborIdx.size();
+        } 
+    }
+
+    A.reserve(maxNeighborAmount+1);
+
+    int id = 0;
+    for (const auto &vert : *(ptr_mesh_->get_vertex_list())) {
+        id = vert->id();
+        if (vert->isOnBoundary()) {
+            A.insert(id, id) = 1;
+            b(id, 0) = vert->position_[0];
+            b(id, 1) = vert->position_[1];
+            b(id, 2) = vert->position_[2];
+        } else {
+            A.insert(id, id) = vert->neighborIdx.size();
+            for (const auto &neighborId : vert->neighborIdx) {
+                A.insert(id, neighborId) = -1;
+            }
+        }
+    }
+
+    A.makeCompressed();
+
+    typedef Eigen::SparseLU<Eigen::SparseMatrix<float>> SolverType;
+    SolverType solver;
+    solver.compute(A);
+
+    if(solver.info() != Eigen::Success) {
+        // decomposition failed
+        std::cerr << "decomposition failed" << std::endl;
+        return;
+    }
+    x = solver.solve(b);
+    if(solver.info() != Eigen::Success) {
+        // solving failed
+        std::cerr << "solving failed" << std::endl;
+        return;
+    }
+
+    for (int i = 0; i < verticesTotalAmount; ++i) {
+        ((*(ptr_mesh_->get_vertex_list()))[i])->position_[0] = x(i,0);
+        ((*(ptr_mesh_->get_vertex_list()))[i])->position_[1] = x(i,1);
+        ((*(ptr_mesh_->get_vertex_list()))[i])->position_[2] = x(i,2);
+    }
+
+    updateGL();
+}
+
+void RenderingWidget::GenerateMinimalSurfaceByGlobal() {
+    std::cout << "global method" << std::endl;
+    if (!ptr_mesh_->num_of_vertex_list()) {
+        std::cerr << 
+            "no valid mesh data, so no minimal surface generated"
+            << std::endl;
+        return;
+    }
+}
+
