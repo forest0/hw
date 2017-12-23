@@ -529,7 +529,7 @@ void RenderingWidget::DrawTexture(bool bv)
     glEnd();
 }
 
-void RenderingWidget::GenerateMinimalSurfaceByLocal() {
+void RenderingWidget::GenerateMinimalSurfaceByGlobal() {
     const int verticesTotalAmount = ptr_mesh_->num_of_vertex_list();
     if (!verticesTotalAmount) {
         std::cerr << 
@@ -552,7 +552,8 @@ void RenderingWidget::GenerateMinimalSurfaceByLocal() {
         } 
     }
 
-    A.reserve(maxNeighborAmount+1);
+    A.reserve(Eigen::VectorXi::Constant(verticesTotalAmount,
+                maxNeighborAmount+1));
 
     int id = 0;
     for (const auto &vert : *(ptr_mesh_->get_vertex_list())) {
@@ -597,13 +598,91 @@ void RenderingWidget::GenerateMinimalSurfaceByLocal() {
     updateGL();
 }
 
-void RenderingWidget::GenerateMinimalSurfaceByGlobal() {
-    std::cout << "global method" << std::endl;
+void RenderingWidget::GenerateMinimalSurfaceByLocal() {
+    std::cout << "local method" << std::endl;
     if (!ptr_mesh_->num_of_vertex_list()) {
         std::cerr << 
             "no valid mesh data, so no minimal surface generated"
             << std::endl;
         return;
     }
+
+    const int verticesTotalAmount = ptr_mesh_->num_of_vertex_list();
+    Eigen::MatrixX3f inputPoints = Eigen::MatrixX3f::Zero(
+            verticesTotalAmount, 3);
+    Eigen::MatrixX3f outputPoints = Eigen::MatrixX3f::Zero(
+            verticesTotalAmount, 3);
+
+    // copy vertices to inputPoints
+    int id = 0;
+    for (const auto &vert : *(ptr_mesh_->get_vertex_list())) {
+        id = vert->id();
+        inputPoints(id, 0) = vert->position()[0];
+        inputPoints(id, 1) = vert->position()[1];
+        inputPoints(id, 2) = vert->position()[2];
+    }
+
+
+    const int MAX_ITERATE_TIMES = 1000;
+
+    // why pointer not work here?
+    //      cause ugly code bellow
+    // Eigen::Matrix3f *ptr1 = &inputPoints;
+    // Eigen::Matrix3f *ptr2 = &inputPoints;
+    for (int i = 0; i < MAX_ITERATE_TIMES; ++i) {
+        // two buffer, swap each time
+        if (i % 2 == 0) {
+            LocalIterate(inputPoints, outputPoints);
+        } else {
+            LocalIterate(outputPoints, inputPoints);
+        }
+    }
+
+    // copy outputPoints to mesh vertices
+    if (MAX_ITERATE_TIMES % 2 == 0) {
+        for (int i = 0; i < verticesTotalAmount; ++i) {
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[0] 
+                = inputPoints(i,0);
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[1] 
+                = inputPoints(i,1);
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[2] 
+                = inputPoints(i,2);
+        }
+    } else {
+        for (int i = 0; i < verticesTotalAmount; ++i) {
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[0] 
+                = outputPoints(i,0);
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[1] 
+                = outputPoints(i,1);
+            ((*(ptr_mesh_->get_vertex_list()))[i])->position_[2] 
+                = outputPoints(i,2);
+        }
+    }
+
+    updateGL();
 }
 
+void RenderingWidget::LocalIterate(Eigen::MatrixX3f &inputPoints,
+        Eigen::MatrixX3f &outputPoints) {
+
+    const float STEP_SIZE = 0.3f;
+
+    Eigen::RowVector3f sum = Eigen::RowVector3f::Zero(1, 3);
+    int id = 0;
+    for (const auto &vert : *(ptr_mesh_->get_vertex_list())) {
+        id = vert->id();
+        outputPoints.row(id) = inputPoints.row(id);
+        if (!vert->isOnBoundary()) {
+            sum(0) = sum(1) = sum(2) = 0;
+            for (const auto &neighborId : vert->neighborIdx) {
+                sum += inputPoints.row(id) - 
+                    inputPoints.row(neighborId);
+            }
+            sum *= STEP_SIZE / vert->neighborIdx.size();;
+
+            outputPoints.row(id) -= sum;
+        }
+
+    }
+
+}

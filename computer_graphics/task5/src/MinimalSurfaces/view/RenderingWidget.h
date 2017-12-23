@@ -4,6 +4,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtCore/QEvent>
 #include "../model/HE_mesh/Vec.h"
+#include "../libs/Eigen/Dense"
 
 using trimesh::vec;
 using trimesh::point;
@@ -44,6 +45,9 @@ signals:
 private:
     void Render();
     void SetLight();
+
+    void LocalIterate(Eigen::MatrixX3f &inputPoints,
+            Eigen::MatrixX3f &outputPoints);
 
 public slots:
     void SetBackground();
