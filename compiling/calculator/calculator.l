@@ -1,30 +1,44 @@
 %{
 #include <stdlib.h>
-void yyerror(char *);
+#include "definition.h"
 #include "calculator.yacc.h"
+void yyerror(char *);
 %}
 
 %%
 
     /* variables */
 [a-z] {
-    yylval = *yytext - 'a';
+    yylval.sIndex = *yytext - 'a';
     return VARIABLE;
 }
 
     /* integers */
-[0-9]+ {
-    yylval = atoi(yytext);
+0 {
+    yylval.iValue = atoi(yytext);
+    return INTEGER;
+}
+[1-9][0-9]* {
+    yylval.iValue = atoi(yytext);
     return INTEGER;
 }
 
     /* opeators */
-[-+()=/*\n] {
+[-()<>=+*/;{}.] {
     return *yytext;
 }
 
+">="    return GE;
+"<="    return LE;
+"=="    return EQ;
+"!="    return NE;
+"while" return WHILE;
+"if"    return IF;
+"else"  return ELSE;
+"print" return PRINT;
+
     /* ignore whitespace */
-[ \t] ;
+[ \t\n]+ ;
 
     /* anything else is an error */
 . {

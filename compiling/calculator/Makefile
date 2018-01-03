@@ -5,8 +5,8 @@ APPNAME := calculator
 run: $(APPNAME)
 	./$<
 
-$(APPNAME): $(APPNAME).lex.c $(APPNAME).yacc.c
-	$(CC) $(APPNAME).lex.c $(APPNAME).yacc.c -o $@
+$(APPNAME): $(APPNAME).lex.c $(APPNAME).yacc.c generateParseTree.c
+	$(CC) $(APPNAME).lex.c $(APPNAME).yacc.c generateParseTree.c -o $@
 
 $(APPNAME).yacc.c : $(APPNAME).y
 	yacc -d $< -o $(APPNAME).yacc.c
