@@ -1,7 +1,7 @@
 %{
 #include <stdlib.h>
 #include "definition.h"
-#include "calculator.yacc.h"
+#include "tiny.yacc.h"
 void yyerror(char *);
 %}
 

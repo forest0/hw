@@ -9,12 +9,13 @@
     nodeType *id(int i);
     nodeType *con(int value);
     void freeNode(nodeType *p);
-    int ex(nodeType *p);
+    int traverseTree(nodeType *p);
+    void onExit();
     int yylex(void);
 
     void yyerror(char *);
 
-    int sym[26];    /* symbol table */
+    int sym[26];    // symbol table
 
 %}
 
@@ -25,7 +26,7 @@
 }
 
 %token <iValue> INTEGER
-%token <sIndex> VARIABLE;
+%token <sIndex> VARIABLE
 %token WHILE IF PRINT
 %nonassoc IFX
 %nonassoc ELSE
@@ -41,11 +42,11 @@
 %%
 
 program:
-        function                            { exit(0); }
+        function                            { onExit(); exit(0); }
         ;
 
 function:
-        function stmt                       { ex($2); freeNode($2); }
+        function stmt                       { traverseTree($2); freeNode($2); }
         |   /* NULL */
         ;
 
