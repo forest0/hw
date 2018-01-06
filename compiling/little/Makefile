@@ -1,6 +1,6 @@
 CC := gcc
 RM := rm -f
-APPNAME := tiny
+APPNAME := little
 
 run: $(APPNAME)
 	./$<
