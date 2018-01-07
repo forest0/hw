@@ -6,6 +6,7 @@ RM := rm -f
 objs := main.o scan.o utils.o parse.o viz.o
 EXECUTABLE := tiny
 INPUT := ./source.tny
+vizFiles := syntaxTree.dot syntaxTree.svg
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE) $(INPUT)
@@ -31,4 +32,4 @@ utils.o: utils.c utils.h globals.h
 .PHONY: clean
 
 clean:
-	$(RM) $(objs) $(EXECUTABLE)
+	$(RM) $(objs) $(EXECUTABLE) $(vizFiles)

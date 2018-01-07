@@ -29,4 +29,4 @@ graph.svg: graph.dot
 	dot -Tsvg -o graph.svg graph.dot
 
 clean:
-	$(RM) $(APPNAME).lex.c $(APPNAME).yacc.c $(APPNAME).yacc.h $(APPNAME)
+	$(RM) $(APPNAME).lex.c $(APPNAME).yacc.c $(APPNAME).yacc.h $(APPNAME) graph.dot graph.svg
