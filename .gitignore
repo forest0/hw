@@ -3,6 +3,8 @@
 *.doc
 *.docx
 *.png
+*.svg
+*.o
 
 # vim file {{{
 *.swp
@@ -72,13 +74,16 @@ computer_graphics/task5/src/MinimalSurfaces/libs
 
 
 # compiler {{{
-compiling/tiny/*
-!compiling/tiny/tiny.l
-!compiling/tiny/tiny.y
-!compiling/tiny/definition.h
-!compiling/tiny/Makefile
-!compiling/tiny/generateParseTree.c
+compiling/little/*
+!compiling/little/little.l
+!compiling/little/little.y
+!compiling/little/definition.h
+!compiling/little/Makefile
+!compiling/little/generateParseTree.c
 
 compiling/lex
 compiling/yacc
+
+compiling/tiny/*.dot
+compiling/tiny/tiny
 # }}}

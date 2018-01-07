@@ -1,0 +1,27 @@
+{ Sample program in TINY language 
+    calculate the sum of [x...y],
+    in which step size is 1
+}
+
+x := 0;
+y := 0;
+
+{ input begin and end }
+read x;
+read y;
+
+{ swap x, y if x > y }
+if y < x then
+    tmp := x;
+    x   := y;
+    y   := tmp
+end;
+
+sum := 0;
+repeat
+    sum := sum + x;
+    x := x + 1
+until y < x;
+
+{ output result }
+write sum
