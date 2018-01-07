@@ -155,7 +155,7 @@ void newDotNode(int parentNodeNumber, const char *label) {
         return;
     }
 
-    sprintf(buffer, "\nn%d [label=\"%s\"];\n", globalNodeNumber++, label);
+    sprintf(buffer, "\tn%d [label=\"%s\"];\n", globalNodeNumber++, label);
     pushToDotFile(buffer);
 
     if (parentNodeNumber < 0) {
