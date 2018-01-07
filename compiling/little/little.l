@@ -1,3 +1,10 @@
+/* specify input for Lex to generate scanner for LITTLE compiler
+
+ * reference: 
+ *     Lex & Yacc Tutorial 
+ *         by Tom Niemann
+ */
+
 %{
 #include <stdlib.h>
 #include "definition.h"

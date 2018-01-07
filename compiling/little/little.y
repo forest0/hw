@@ -1,3 +1,10 @@
+/* specify input for Yacc to generate parser for LITTLE compiler
+
+ * reference: 
+ *     Lex & Yacc Tutorial 
+ *         by Tom Niemann
+ */
+
 %{
     #include <stdio.h>
     #include <stdlib.h>
