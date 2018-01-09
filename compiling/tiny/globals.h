@@ -87,16 +87,9 @@ extern int traceScan;
 /* traceParse = TRUE will print the syntax tree */
 extern int traceParse;
 
-/* generateDotFile = TRUE will generate the dot file
- * when parsing */
+/* generateDotFile = TRUE will generate the dot file which
+ *      descripe the syntax tree with Graphviz in parsing */
 extern int generateDotFile;
-
-/* showGraphViz = TRUE will fork a process to convert dot to
- * svg, and then call eog to show the generated svg
- * 
- * NOTE: to enable this, generateDotFile must be set to TRUE
- * */
-extern int showGraphViz;
 
 /* stopWhenError = TRUE will stop further passes when error occurs */
 extern int stopWhenError;

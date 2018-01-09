@@ -2,6 +2,7 @@
 
 #include "globals.h"
 #include "utils.h"
+#include <assert.h>
 
 /* should only be used for debug purpose */
 void token2String(TokenType token,
@@ -260,3 +261,148 @@ char * copyString(const char *str) {
     return newStr;
 }
 
+/**********************************************************************/
+/* code related to generate dot file */
+
+static FILE * _dotFile = NULL;
+static int globalNodeNumber = 0;
+
+/* append text to dot file */
+static void pushToDotFile(const char *text);
+
+/* add a new dot node */
+/*     return the number of the new node if succeed */
+/*         otherwise, -1 is returned */
+static int newDotNode(int parentNodeNumber, const char *label);
+/* add a new dot edge with two corresponding vertex number */
+static void newDotEdge(int num1, int num2);
+
+static void dotFileInit();
+static void dotFileFinish();
+
+/* traverse node whose parent is parentNodeNumber recursively */
+static void traverseTree(struct TreeNode *node, int parentNodeNumber);
+
+
+static void traverseTree(struct TreeNode *node, int parentNodeNumber) {
+    int i;
+    const char *s = NULL;
+    char label[64];
+    char *str;
+
+
+    while (node) {
+        s = label;
+        if (node->nodeKind == StmtK) {
+            switch (node->kind.stmt) {
+                case IfK:
+                    s = "IF";
+                    break;
+                case RepeatK:
+                    s = "REPEAT";
+                    break;
+                case AssignK:
+                    sprintf(label, "ASSIGN(%s)", node->attr.name);
+                    break;
+                case ReadK:
+                    sprintf(label, "READ(%s)", node->attr.name);
+                    break;
+                case WriteK:
+                    s = "WRITE";
+                    break;
+                default:
+                    strcpy(label, "unknown StmtNode kind"); // this should never appear
+                    break;
+            }
+        } else if (node->nodeKind == ExpK) {
+            switch (node->kind.exp) {
+                case OpK:
+                    token2String(node->attr.op, "\0", &str);
+                    sprintf(label, "OP(%s)", str);
+                    break;
+                case ConstK:
+                    sprintf(label, "CONST(%d)", node->attr.val);
+                    break;
+                case IdK:
+                    sprintf(label, "ID(%s)", node->attr.name);
+                    break;
+                default:
+                    strcpy(label, "unknown ExpNode kind"); // this should never appear
+                    break;
+            }
+        } else {
+            strcpy(label, "unknown node kind"); // this should never appear
+        }
+        int selfNumber = newDotNode(parentNodeNumber, s);
+        if (selfNumber >= 0) {
+            newDotEdge(parentNodeNumber, selfNumber);
+        }
+
+        for (i = 0; i < MAX_CHILDREN; ++i) {
+            traverseTree(node->child[i], selfNumber);
+        }
+        node = node->sibling;
+    }
+}
+
+static void dotFileInit() {
+    const char * DOT_FILE_HEAD = "graph g {\n"
+        "\tnode [shape=plaintext];\n"
+        "\tn0 [label=\"stmt-sequence\"];\n";
+
+    /* dot file header */
+    pushToDotFile(DOT_FILE_HEAD);
+}
+
+static void dotFileFinish() {
+    const char * DOT_FILE_TAIL = "\n}\n";
+
+    pushToDotFile(DOT_FILE_TAIL);
+}
+
+static void pushToDotFile(const char *text) {
+    fprintf(_dotFile, "%s", text);
+}
+
+static int newDotNode(int parentNodeNumber, const char *label) {
+    char buffer[64];
+
+    if (parentNodeNumber < -1) {
+        return -1;
+    }
+
+    sprintf(buffer, "\tn%d [label=\"%s\"];\n", globalNodeNumber++, label);
+    pushToDotFile(buffer);
+
+    return globalNodeNumber - 1;
+
+    /* newDotEdge(parentNodeNumber, globalNodeNumber-1); */
+}
+
+static void newDotEdge(int num1, int num2) {
+    char buffer[64];
+    if (num1 < 0 || num2 < 0) {
+        fprintf(stderr, "%s\n", "attempt to build invalid edge");
+        return;
+    }
+
+    sprintf(buffer, "\tn%d -- n%d;\n", num1, num2);
+    pushToDotFile(buffer);
+}
+
+/* descripe the syntax tree using Graphviz, store the descriptions */
+/*     in dotFile */
+void syntaxTree2DotFile(struct TreeNode *tree, FILE *dotFile) {
+    assert(dotFile);
+    _dotFile = dotFile;
+
+    dotFileInit();
+
+    globalNodeNumber = 1;
+    traverseTree(tree, globalNodeNumber-1);
+
+    dotFileFinish();
+}
+
+/* code related to generate dot file end */
+/**********************************************************************/

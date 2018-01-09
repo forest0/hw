@@ -23,7 +23,6 @@
 #include "scan.h"
 #else
 #include "parse.h"
-#include "viz.h"
 #endif
 
 /* global variables */
@@ -39,7 +38,6 @@ int traceScan  = TRUE;
 
 int traceParse = TRUE;
 int generateDotFile = TRUE;
-int showGraphViz = TRUE;
 
 /**************** end of tracing flags ***************/
 
@@ -76,11 +74,20 @@ int main(int argc, char *argv[]) {
     if (traceParse) {
         fprintf(listing, "\nsyntax tree:\n");
         printTree(syntaxTree);
-
     }
 
-    if (generateDotFile && showGraphViz) {
-        showGraphVizTree(syntaxTree);
+    /* generate dot file */
+    if (generateDotFile) {
+        FILE * dotFile = fopen("syntaxTree.dot", "w");
+        if (!dotFile) {
+            perror("failed to open dot file: ");
+        } else {
+            syntaxTree2DotFile(syntaxTree, dotFile);
+
+            if (fclose(dotFile) != 0) {
+                perror("failed to close dot file: ");
+            }
+        }
     }
 #endif
 
