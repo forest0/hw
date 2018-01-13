@@ -70,6 +70,15 @@ computer_graphics/task5/src/bin
 computer_graphics/task5/src/MinimalSurfaces/libs
 # }}}
 
+# task 6 {{{
+computer_graphics/task6/data
+computer_graphics/task6/doc
+computer_graphics/task6/pub
+computer_graphics/task6/bin
+computer_graphics/task6/src/bin
+computer_graphics/task6/src/SurfaceParameterization/libs
+# }}}
+
 # }}}
 
 
@@ -83,6 +92,7 @@ compiling/little/*
 
 compiling/lex
 compiling/yacc
+compiling/report
 
 compiling/tiny/*.dot
 compiling/tiny/tiny
