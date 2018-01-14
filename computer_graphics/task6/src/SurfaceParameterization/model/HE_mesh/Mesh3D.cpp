@@ -879,7 +879,7 @@ Mesh3D::~Mesh3D(void)
  *      there alway exists a half-edge
  *      from boundaryVertices[i] to boundaryVertices[i+1],
  *      specially, boundaryVertices[n-1] to boundaryVertices[0]
- *      also form the corresponding half edge */
+ *      also form the corresponding half-edge */
 
 /* FIXME: <14-01-18, forest9643> 
  *      four test case in data/ folder passed

@@ -91,10 +91,6 @@ public:
     bool                  is_draw_axes_;
 
 private:
-    
-    /********** <add by forest9643, 14-01-18> **********/
-    void drawContinuousBoundary(int idx);
-    /***************************************************/
 };
 
 #endif // RENDERINGWIDGET_H

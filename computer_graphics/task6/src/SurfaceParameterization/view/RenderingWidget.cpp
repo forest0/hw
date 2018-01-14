@@ -205,12 +205,6 @@ void RenderingWidget::keyReleaseEvent(QKeyEvent *e)
     }
 }
 
-/********** <add by forest9643, 14-01-18> **********/
-// debug purpose
-static int drawEdgeIdx = -1;
-static void drawContinuousBoundary(int);
-/***************************************************/
-
 void RenderingWidget::Render()
 {
     DrawAxes(is_draw_axes_);
@@ -219,10 +213,6 @@ void RenderingWidget::Render()
     DrawEdge(is_draw_edge_);
     DrawFace(is_draw_face_);
     DrawTexture(is_draw_texture_);
-
-    /********** <add by forest9643, 14-01-18> **********/
-    drawContinuousBoundary(drawEdgeIdx);
-    /***************************************************/
 }
 
 void RenderingWidget::SetLight()
@@ -546,42 +536,7 @@ void RenderingWidget::DrawTexture(bool bv)
 #include "../utils/Logger.h"
 #include <cassert>
 void RenderingWidget::Debug() {
-    ++drawEdgeIdx;
-    int boudaryVerticesAmount = ptr_mesh_->orderedBoudaryVertices.size();
-    assert(boudaryVerticesAmount > 3);
-    if (drawEdgeIdx >= boudaryVerticesAmount) {
-        drawEdgeIdx %= boudaryVerticesAmount;
-    }
-    updateGL();
+    Logger::i("debug clicked\n");
 }
 
-// just for debug purpose, visually show that the continuous boundary is found
-// by drawing one half-edge a time with one mouse click
-void RenderingWidget::drawContinuousBoundary(int idx) {
-    if (idx < 0) {
-        return;
-    }
-
-    int boundaryVerticesAmount = ptr_mesh_->orderedBoudaryVertices.size();
-
-    glBegin(GL_LINES);
-    glColor3f(0.0, 1.0, 0.0);
-    int i;
-    for (i = 0; (i < drawEdgeIdx) && (i-1 < boundaryVerticesAmount); ++i) {
-        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[i]->normal().data());
-        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[i]->position().data());
-        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[i+1]->normal().data());
-        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[i+1]->position().data());
-    }
-    if (i == boundaryVerticesAmount - 1) {
-        glNormal3fv(ptr_mesh_->
-                orderedBoudaryVertices[boundaryVerticesAmount-1]-> normal().data());
-        glVertex3fv(ptr_mesh_->
-                orderedBoudaryVertices[boundaryVerticesAmount-1]->position().data());
-        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[0]->normal().data());
-        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[0]->position().data());
-    }
-    glColor3f(1.0, 1.0, 1.0);
-    glEnd();
-}
 /***************************************************/
