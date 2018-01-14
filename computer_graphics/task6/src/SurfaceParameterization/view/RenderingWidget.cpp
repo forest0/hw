@@ -10,9 +10,9 @@
 #include <GL/glut.h>
 #include <algorithm>
 #include "MainWindow.h"
-#include "../ArcBall.h"
+#include "../model/ArcBall.h"
 #include "../GlobalFunctions.h"
-#include "../HE_mesh/Mesh3D.h"
+#include "../model/HE_mesh/Mesh3D.h"
 
 RenderingWidget::RenderingWidget(QWidget *parent, 
         MainWindow* mainwindow)
@@ -205,6 +205,12 @@ void RenderingWidget::keyReleaseEvent(QKeyEvent *e)
     }
 }
 
+/********** <add by forest9643, 14-01-18> **********/
+// debug purpose
+static int drawEdgeIdx = -1;
+static void drawContinuousBoundary(int);
+/***************************************************/
+
 void RenderingWidget::Render()
 {
     DrawAxes(is_draw_axes_);
@@ -213,6 +219,10 @@ void RenderingWidget::Render()
     DrawEdge(is_draw_edge_);
     DrawFace(is_draw_face_);
     DrawTexture(is_draw_texture_);
+
+    /********** <add by forest9643, 14-01-18> **********/
+    drawContinuousBoundary(drawEdgeIdx);
+    /***************************************************/
 }
 
 void RenderingWidget::SetLight()
@@ -257,7 +267,7 @@ void RenderingWidget::ReadMesh()
         emit(operatorInfo(QString("Read Mesh Failed!")));
         return;
     }
-    //ÖÐÎÄÂ·¾¶Ö§³Ö
+    //ä¸­æ–‡è·¯å¾„æ”¯æŒ
     QTextCodec *code = QTextCodec::codecForName("gd18030");
     QTextCodec::setCodecForLocale(code);
 
@@ -429,8 +439,14 @@ void RenderingWidget::DrawPoints(bool bv)
     for (size_t i = 0; i != ptr_mesh_->num_of_vertex_list(); ++i)
     {
         glNormal3fv(verts[i]->normal().data());
+        if (verts[i]->isOnBoundary()) {
+            glColor3f(1.0, 0.0, 0.0);
+        } else {
+            glColor3f(1.0, 1.0, 1.0);
+        }
         glVertex3fv(verts[i]->position().data());
     }
+    glColor3f(1.0, 1.0, 1.0);
     glEnd();
 }
 
@@ -500,7 +516,7 @@ void RenderingWidget::DrawTexture(bool bv)
     if (ptr_mesh_->num_of_face_list() == 0 || !is_load_texture_)
         return;
 
-    //Ä¬ÈÏÊ¹ÓÃÇòÃæÎÆÀíÓ³Éä£¬Ð§¹û²»ºÃ
+    //é»˜è®¤ä½¿ç”¨çƒé¢çº¹ç†æ˜ å°„ï¼Œæ•ˆæžœä¸å¥½
     ptr_mesh_->SphereTex();
 
     const std::vector<HE_face *>& faces = 
@@ -513,7 +529,7 @@ void RenderingWidget::DrawTexture(bool bv)
         HE_edge *pedge(faces.at(i)->pedge_);
         do
         {
-            /*ÇëÔÚ´Ë´¦»æÖÆÎÆÀí£¬Ìí¼ÓÎÆÀí×ø±ê¼´¿É*/
+            /*è¯·åœ¨æ­¤å¤„ç»˜åˆ¶çº¹ç†ï¼Œæ·»åŠ çº¹ç†åæ ‡å³å¯*/
             glTexCoord2fv(pedge->pvert_->texCoord_.data());
             glNormal3fv(pedge->pvert_->normal().data());
             glVertex3fv(pedge->pvert_->position().data());
@@ -525,3 +541,47 @@ void RenderingWidget::DrawTexture(bool bv)
 
     glEnd();
 }
+
+/********** <add by forest9643, 14-01-18> **********/
+#include "../utils/Logger.h"
+#include <cassert>
+void RenderingWidget::Debug() {
+    ++drawEdgeIdx;
+    int boudaryVerticesAmount = ptr_mesh_->orderedBoudaryVertices.size();
+    assert(boudaryVerticesAmount > 3);
+    if (drawEdgeIdx >= boudaryVerticesAmount) {
+        drawEdgeIdx %= boudaryVerticesAmount;
+    }
+    updateGL();
+}
+
+// just for debug purpose, visually show that the continuous boundary is found
+// by drawing one half-edge a time with one mouse click
+void RenderingWidget::drawContinuousBoundary(int idx) {
+    if (idx < 0) {
+        return;
+    }
+
+    int boundaryVerticesAmount = ptr_mesh_->orderedBoudaryVertices.size();
+
+    glBegin(GL_LINES);
+    glColor3f(0.0, 1.0, 0.0);
+    int i;
+    for (i = 0; (i < drawEdgeIdx) && (i-1 < boundaryVerticesAmount); ++i) {
+        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[i]->normal().data());
+        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[i]->position().data());
+        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[i+1]->normal().data());
+        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[i+1]->position().data());
+    }
+    if (i == boundaryVerticesAmount - 1) {
+        glNormal3fv(ptr_mesh_->
+                orderedBoudaryVertices[boundaryVerticesAmount-1]-> normal().data());
+        glVertex3fv(ptr_mesh_->
+                orderedBoudaryVertices[boundaryVerticesAmount-1]->position().data());
+        glNormal3fv(ptr_mesh_->orderedBoudaryVertices[0]->normal().data());
+        glVertex3fv(ptr_mesh_->orderedBoudaryVertices[0]->position().data());
+    }
+    glColor3f(1.0, 1.0, 1.0);
+    glEnd();
+}
+/***************************************************/

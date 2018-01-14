@@ -79,12 +79,16 @@ void MainWindow::CreateActions()
     action_loadtexture_ = new QAction(tr("LoadTexture"), this);
     action_background_ = new QAction(tr("ChangeBackground"), this);
 
+    action_debug_ = new QAction(tr("debug"), this);
+
     connect(action_loadmesh_, SIGNAL(triggered()),
             renderingwidget_, SLOT(ReadMesh()));
     connect(action_loadtexture_, SIGNAL(triggered()),
             renderingwidget_, SLOT(LoadTexture()));
     connect(action_background_, SIGNAL(triggered()),
             renderingwidget_, SLOT(SetBackground()));
+    connect(action_debug_, SIGNAL(triggered()),
+            renderingwidget_, SLOT(Debug()));
 }
 
 void MainWindow::CreateMenus()
@@ -108,6 +112,8 @@ void MainWindow::CreateToolBars()
     toolbar_basic_->addAction(action_loadmesh_);
     toolbar_basic_->addAction(action_loadtexture_);
     toolbar_basic_->addAction(action_background_);
+
+    toolbar_basic_->addAction(action_debug_);
 }
 
 void MainWindow::CreateStatusBar()

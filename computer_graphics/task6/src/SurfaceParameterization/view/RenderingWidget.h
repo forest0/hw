@@ -3,7 +3,7 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QtCore/QEvent>
-#include "../HE_mesh/Vec.h"
+#include "../model/HE_mesh/Vec.h"
 
 using trimesh::vec;
 using trimesh::point;
@@ -45,11 +45,13 @@ private:
     void Render();
     void SetLight();
 
-    public slots:
+public slots:
     void SetBackground();
     void ReadMesh();
     void WriteMesh();
     void LoadTexture();
+
+    void Debug();
 
     void CheckDrawPoint(bool bv);
     void CheckDrawEdge(bool bv);
@@ -90,6 +92,9 @@ public:
 
 private:
     
+    /********** <add by forest9643, 14-01-18> **********/
+    void drawContinuousBoundary(int idx);
+    /***************************************************/
 };
 
 #endif // RENDERINGWIDGET_H

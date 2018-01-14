@@ -29,7 +29,7 @@ protected:
     void keyPressEvent(QKeyEvent *e);
     void keyReleaseEvent(QKeyEvent *e);
 
-    public slots:
+public slots:
     void ShowMeshInfo(int npoint, int nedge, int nface);
     void OpenFile();
     void ShowAbout();
@@ -56,6 +56,8 @@ private:
     QAction                * action_loadmesh_;
     QAction                * action_loadtexture_;
     QAction                * action_background_;
+
+    QAction                * action_debug_;
 
     // Render RadioButtons
     QCheckBox              * checkbox_point_;

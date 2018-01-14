@@ -2,7 +2,6 @@
 
 #include <fstream>
 #include <iostream>
-// #include <xutility>
 #include <string.h>
 
 #define SWAP(a,b,T) {T tmp=(a); (a)=(b); (b)=tmp;}
@@ -414,6 +413,10 @@ void Mesh3D::UpdateMesh(void)
     ComputeBoundingBox();
     ComputeAvarageEdgeLength();
     SetNeighbors();
+
+    /********** <add by forest9643, 14-01-18> **********/
+    getBoundaryVerticesInContinuousOrder(orderedBoudaryVertices);
+    /***************************************************/
 }
 
 void Mesh3D::SetBoundaryFlag(void)
@@ -864,3 +867,101 @@ Mesh3D::~Mesh3D(void)
 {
     ClearData();
 }
+
+/********** <add by forest9643, 13-01-18> **********/
+#include <list>
+#include <cassert>
+#include "../../utils/Logger.h"
+
+/* get boundary vertices in continuous order, 
+ * the result will be stored in param `boundaryVertices`.
+ * here continuous means: 
+ *      there alway exists a half-edge
+ *      from boundaryVertices[i] to boundaryVertices[i+1],
+ *      specially, boundaryVertices[n-1] to boundaryVertices[0]
+ *      also form the corresponding half edge */
+
+/* FIXME: <14-01-18, forest9643> 
+ *      four test case in data/ folder passed
+ *      but Bunny_head.obj failed
+ * */
+void Mesh3D::getBoundaryVerticesInContinuousOrder(
+        std::vector<HE_vert *> &boundaryVertices) {
+
+    if (num_of_vertex_list() < 3) {
+        Logger::w("%s\n", "vertices amount < 3, return");
+        return;
+    }
+
+    // get all boundary vertices first
+    int boudaryVerticesAmount = 0;
+    std::list<HE_vert *> unorderedBoundaryVertices;
+    for (const auto &vert : *pvertices_list_) {
+        if (vert->isOnBoundary()) {
+            unorderedBoundaryVertices.push_back(vert);
+            ++boudaryVerticesAmount;
+        }
+    }
+
+    // Logger::d("boudaryVerticesAmount=%d, index are: ", 
+    //         boudaryVerticesAmount);
+    // for (const auto &vert : unorderedBoundaryVertices) {
+    //     fprintf(stderr, "%d, ", vert->id());
+    // }
+    // fprintf(stderr, "\n");
+
+
+    assert(boudaryVerticesAmount > 3);
+
+    boundaryVertices.clear();
+    boundaryVertices.reserve(boudaryVerticesAmount);
+
+    // travel from one boundary point alone the bounary, finally get a circle
+    int loopCnt = 0; // do-while  loop exec amount, to prevent dead-loop
+    HE_vert *currentVert = unorderedBoundaryVertices.front();
+    boundaryVertices.push_back(currentVert);
+    unorderedBoundaryVertices.pop_front();
+    do {
+        std::list<HE_vert *>::iterator iter;
+        for (iter = unorderedBoundaryVertices.begin(); 
+                iter != unorderedBoundaryVertices.end();
+                ++iter) {
+            if (get_edge(currentVert, *iter)) {
+                // Logger::d("found boundary edge: %d -> %d\n", 
+                //         currentVert->id(), (*iter)->id());
+                boundaryVertices.push_back(*iter);
+                currentVert = *iter;
+                unorderedBoundaryVertices.erase(iter);
+                break;
+            }
+        }
+        ++loopCnt;
+    } while (!unorderedBoundaryVertices.empty() && 
+                (loopCnt+1 < boudaryVerticesAmount)); // dead-loop prevent
+
+    // check amount
+    if (!unorderedBoundaryVertices.empty()) {
+        Logger::e("failed to get continuous boundary vertices, "
+                "total boudaryVerticesAmount=%d, "
+                "continuous boundary vertices found: %d, loopCnt=%d, "
+                "currentVert index: %d, "
+                "all neighborIdx of %d are as follows: \n",
+                boudaryVerticesAmount, boundaryVertices.size(), loopCnt,
+                currentVert->id(), currentVert->id());
+        // print all neighborIdx of currentVert
+        std::copy(currentVert->neighborIdx.cbegin(), 
+                currentVert->neighborIdx.cend(),
+                std::ostream_iterator<int>(std::cerr, ", "));
+        std::cerr << std::endl;
+        return;
+    }
+    // check whether tail can connect to head
+    if (!get_edge(boundaryVertices.back(), boundaryVertices.front())) {
+        Logger::e("tail can not be connected to head\n");
+        return;
+    }
+
+    Logger::i("succeed to find %d continuous boundary vertices\n", 
+            boundaryVertices.size());
+}
+/***************************************************/

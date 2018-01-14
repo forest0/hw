@@ -28,19 +28,22 @@ DEFINES += FALSE=false TRUE=true
 
 SOURCES += \
         main.cpp \
-        ArcBall.cpp \
+        model/ArcBall.cpp \
+        model/HE_mesh/Mesh3D.cpp \
         view/MainWindow.cpp \
         view/RenderingWidget.cpp \
-        HE_mesh/Mesh3D.cpp
+        utils/Utils.cpp
 
 HEADERS += \
 #        libs/triangle/triangle.h
-        ArcBall.h \
+        model/ArcBall.h \
         view/MainWindow.h \
         view/RenderingWidget.h \
         GlobalFunctions.h \
-        HE_mesh/Mesh3D.h \
-        HE_mesh/Vec.h
+        model/HE_mesh/Mesh3D.h \
+        model/HE_mesh/Vec.h \
+        utils/Logger.h \
+        Utils/Utils.h
 
 LIBS += -lglut -lGLU
 
