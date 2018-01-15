@@ -25,11 +25,14 @@ MainWindow::MainWindow(QWidget *parent)
     CreateStatusBar();
     CreateRenderGroup();
     CreateParameterizationGroup();
+    CreateCoordinateShownGroup();
 
     QVBoxLayout *layout_left = new QVBoxLayout;
     layout_left->addWidget(groupbox_render_);
-    layout_left->addStretch(4);
+
     layout_left->addWidget(groupbox_parameterization_);
+
+    layout_left->addWidget(groupbox_coordinate_shown_);
     layout_left->addStretch(4);
 
     QHBoxLayout *layout_main = new QHBoxLayout;
@@ -205,6 +208,30 @@ void MainWindow::CreateParameterizationGroup() {
             radiobutton_weighted_least_square_);
     parameterization_layout->addWidget(
             radiobutton_shape_preserving_);
+}
+
+void MainWindow::CreateCoordinateShownGroup() {
+    radiobutton_show_vertices_coordinate_ = new QRadioButton(
+            tr("vertex coordinate"), this);
+    radiobutton_show_vertices_coordinate_->setChecked(true);
+    connect(radiobutton_show_vertices_coordinate_, SIGNAL(clicked(bool)),
+            renderingwidget_, SLOT(CheckShowVerticesCoordinate(bool)));
+
+    radiobutton_show_parameterized_coordinate_ = 
+        new QRadioButton(tr("parameterized coordinate"), this);
+    connect(radiobutton_show_parameterized_coordinate_,
+            SIGNAL(clicked(bool)),
+            renderingwidget_, SLOT(CheckShowParameterizedCoordinate(bool)));
+
+    groupbox_coordinate_shown_= new QGroupBox(
+            tr("Vertex Shown"), this);
+
+    QVBoxLayout* coordinate_shown_layout = new QVBoxLayout(
+            groupbox_coordinate_shown_);
+    coordinate_shown_layout->addWidget(
+            radiobutton_show_vertices_coordinate_);
+    coordinate_shown_layout->addWidget(
+            radiobutton_show_parameterized_coordinate_);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e)

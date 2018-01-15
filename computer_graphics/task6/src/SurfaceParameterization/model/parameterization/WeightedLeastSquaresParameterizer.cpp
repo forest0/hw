@@ -13,7 +13,7 @@ REAL WeightedLeastSquaresParameterizer::getWeightIJ(
         HE_vert *vertI, HE_vert *vertJ) const {
 
     assert(vertI && vertJ);
-    const REAL EPSILON = 1e-6;
+    const REAL EPSILON = 1e-7;
 
     if (mesh->isNeighbors(vertI, vertJ)) {
         REAL sum = 0.0f;

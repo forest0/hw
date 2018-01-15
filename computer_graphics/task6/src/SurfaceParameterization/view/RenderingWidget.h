@@ -65,6 +65,10 @@ public slots:
     void CheckWeightedLeastSquares(bool bv);
     void CheckShapePreserving(bool bv);
 
+    void CheckShowVerticesCoordinate(bool bv);
+    void CheckShowParameterizedCoordinate(bool bv);
+
+
 private:
     void DrawAxes(bool bv);
     void DrawPoints(bool);
@@ -100,6 +104,7 @@ public:
     ParameterizationMethod parameterizationMethod;
 
 private:
+    bool isVerticesCoordinateShown;
 };
 
 #endif // RENDERINGWIDGET_H

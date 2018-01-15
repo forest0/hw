@@ -106,8 +106,9 @@ void FixedBorderParameterizer::solveSparseEquation(
 void FixedBorderParameterizer::parameterizeBorder(
         const std::vector<HE_vert *> orderedBoudaryVertices,
         std::vector<trimesh::vec3> & parameterizedBorderCoor) const {
+
     REAL totalBoundaryLength = mesh->getTotalBoundaryLength();
-    const REAL EPSILON = 1e-6;
+    const REAL EPSILON = 1e-7;
     assert(totalBoundaryLength > EPSILON);
 
     REAL sum = 0.0f;
@@ -127,7 +128,7 @@ void FixedBorderParameterizer::parameterizeBorder(
                     trimesh::vec3(4.0f * rate, 0.0f, 0.0f));
         } else if (rate < 0.5f) {
             parameterizedBorderCoor.push_back(
-                    trimesh::vec3(0.25f, 4.0f * rate - 1.0f, 0.0f));
+                    trimesh::vec3(1.0f, 4.0f * rate - 1.0f, 0.0f));
         } else if (rate < 0.75f) {
             parameterizedBorderCoor.push_back(
                     trimesh::vec3(-4.0f * rate + 3, 1.0f, 0.0f));

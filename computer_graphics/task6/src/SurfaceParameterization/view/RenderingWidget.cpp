@@ -14,6 +14,11 @@
 #include "../GlobalFunctions.h"
 #include "../model/HE_mesh/Mesh3D.h"
 #include "../utils/Logger.h"
+#include <cassert>
+#include "../model/parameterization/Parameterizer.h"
+#include "../model/parameterization/UniformParameterizer.h"
+#include "../model/parameterization/WeightedLeastSquaresParameterizer.h"
+#include "../model/parameterization/ShapePreservingParameterizer.h"
 
 RenderingWidget::RenderingWidget(QWidget *parent, 
         MainWindow* mainwindow)
@@ -21,7 +26,8 @@ RenderingWidget::RenderingWidget(QWidget *parent,
     eye_distance_(5.0), has_lighting_(false),
     is_draw_point_(true), is_draw_edge_(false),
     is_draw_face_(false), is_draw_texture_(false),
-    parameterizationMethod(ParameterizationMethod::UNIFORM)
+    parameterizationMethod(ParameterizationMethod::UNIFORM),
+    isVerticesCoordinateShown(true)
 {
     ptr_arcball_ = new CArcBall(width(), height());
     ptr_mesh_ = new Mesh3D();
@@ -394,6 +400,19 @@ void RenderingWidget::CheckShapePreserving(bool bv) {
         updateGL();
     }
 }
+void RenderingWidget::CheckShowVerticesCoordinate(bool bv) {
+    if (bv) {
+        isVerticesCoordinateShown = true;
+        updateGL();
+    }
+}
+
+void RenderingWidget::CheckShowParameterizedCoordinate(bool bv) {
+    if (bv) {
+        isVerticesCoordinateShown = false;
+        updateGL();
+    }
+}
 
 void RenderingWidget::DrawAxes(bool bV)
 {
@@ -458,7 +477,11 @@ void RenderingWidget::DrawPoints(bool bv)
         // } else {
         //     glColor3f(1.0, 1.0, 1.0);
         // }
-        glVertex3fv(verts[i]->position().data());
+        if (isVerticesCoordinateShown) {
+            glVertex3fv(verts[i]->position().data());
+        } else {
+            glVertex3fv(verts[i]->texCoord_.data());
+        }
     }
     // glColor3f(1.0, 1.0, 1.0);
     glEnd();
@@ -523,13 +546,6 @@ void RenderingWidget::DrawFace(bool bv)
     glEnd();
 }
 
-/********** <add by forest9643, 15-01-18> **********/
-#include "../model/parameterization/Parameterizer.h"
-#include "../model/parameterization/UniformParameterizer.h"
-#include "../model/parameterization/WeightedLeastSquaresParameterizer.h"
-#include "../model/parameterization/ShapePreservingParameterizer.h"
-/***************************************************/
-
 void RenderingWidget::DrawTexture(bool bv)
 {
     if (!bv)
@@ -556,7 +572,7 @@ void RenderingWidget::DrawTexture(bool bv)
             methodStr = "SHAPE_PRESERVING";
             break;
     }
-    Logger::i("parameterize with %s\n", methodStr);
+    Logger::i("parameterize with %s method\n", methodStr);
     std::vector<trimesh::vec3> parameterizedCoor =
         parameterizer->parameterize();
     for (auto &vert: *(ptr_mesh_->get_vertex_list())) {
@@ -588,12 +604,6 @@ void RenderingWidget::DrawTexture(bool bv)
     glEnd();
 }
 
-/********** <add by forest9643, 14-01-18> **********/
-#include "../utils/Logger.h"
-#include <cassert>
 void RenderingWidget::Debug() {
-    Logger::d("total length of boundary: %f\n",
-            ptr_mesh_->getTotalBoundaryLength());
+    Logger::d("debug button clicked\n");
 }
-
-/***************************************************/

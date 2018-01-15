@@ -26,6 +26,7 @@ private:
     void CreateStatusBar();
     void CreateRenderGroup();
     void CreateParameterizationGroup();
+    void CreateCoordinateShownGroup();
 
 protected:
     void keyPressEvent(QKeyEvent *e);
@@ -74,8 +75,13 @@ private:
     QRadioButton           * radiobutton_shape_preserving_;
     QRadioButton           * radiobutton_weighted_least_square_;
 
+    // coordinate RadioButtons
+    QRadioButton           * radiobutton_show_vertices_coordinate_;
+    QRadioButton           * radiobutton_show_parameterized_coordinate_;
+
     QGroupBox              * groupbox_render_;
     QGroupBox              * groupbox_parameterization_;
+    QGroupBox              * groupbox_coordinate_shown_;
 
     // Information
     QLabel                 * label_meshinfo_;
