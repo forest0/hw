@@ -24,9 +24,12 @@ MainWindow::MainWindow(QWidget *parent)
     CreateToolBars();
     CreateStatusBar();
     CreateRenderGroup();
+    CreateParameterizationGroup();
 
     QVBoxLayout *layout_left = new QVBoxLayout;
     layout_left->addWidget(groupbox_render_);
+    layout_left->addStretch(4);
+    layout_left->addWidget(groupbox_parameterization_);
     layout_left->addStretch(4);
 
     QHBoxLayout *layout_main = new QHBoxLayout;
@@ -173,6 +176,35 @@ void MainWindow::CreateRenderGroup()
     render_layout->addWidget(checkbox_texture_);
     render_layout->addWidget(checkbox_light_);
     render_layout->addWidget(checkbox_axes_);
+}
+
+void MainWindow::CreateParameterizationGroup() {
+    radiobutton_uniform_ = new QRadioButton(tr("Uniform"), this);
+    radiobutton_uniform_->setChecked(true);
+    connect(radiobutton_uniform_, SIGNAL(clicked(bool)),
+            renderingwidget_, SLOT(CheckUniform(bool)));
+
+    radiobutton_weighted_least_square_ = new QRadioButton(
+            tr("Weighted Least Square"), this);
+    connect(radiobutton_weighted_least_square_, SIGNAL(clicked(bool)),
+            renderingwidget_, SLOT(CheckWeightedLeastSquares(bool)));
+
+
+    radiobutton_shape_preserving_ = new QRadioButton(
+            tr("Shpare Preserving"), this);
+    connect(radiobutton_shape_preserving_, SIGNAL(clicked(bool)),
+            renderingwidget_, SLOT(CheckShapePreserving(bool)));
+
+    groupbox_parameterization_ = new QGroupBox(
+            tr("Parameterization"), this);
+
+    QVBoxLayout* parameterization_layout = new QVBoxLayout(
+            groupbox_parameterization_);
+    parameterization_layout->addWidget(radiobutton_uniform_);
+    parameterization_layout->addWidget(
+            radiobutton_weighted_least_square_);
+    parameterization_layout->addWidget(
+            radiobutton_shape_preserving_);
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *e)

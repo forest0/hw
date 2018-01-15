@@ -4,6 +4,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QtCore/QEvent>
 #include "../model/HE_mesh/Vec.h"
+#include "../model/parameterization/Parameterizer.h"
 
 using trimesh::vec;
 using trimesh::point;
@@ -60,6 +61,10 @@ public slots:
     void CheckDrawTexture(bool bv);
     void CheckDrawAxes(bool bv);
 
+    void CheckUniform(bool bv);
+    void CheckWeightedLeastSquares(bool bv);
+    void CheckShapePreserving(bool bv);
+
 private:
     void DrawAxes(bool bv);
     void DrawPoints(bool);
@@ -89,6 +94,10 @@ public:
     bool                  is_draw_texture_;
     bool                  has_lighting_;
     bool                  is_draw_axes_;
+
+    // Parameterization information
+    
+    ParameterizationMethod parameterizationMethod;
 
 private:
 };

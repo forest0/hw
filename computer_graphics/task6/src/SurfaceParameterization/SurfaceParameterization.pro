@@ -30,6 +30,11 @@ SOURCES += \
         main.cpp \
         model/ArcBall.cpp \
         model/HE_mesh/Mesh3D.cpp \
+        model/parameterization/Parameterizer.cpp \
+        model/parameterization/FixedBorderParameterizer.cpp \
+        model/parameterization/UniformParameterizer.cpp \
+        model/parameterization/WeightedLeastSquaresParameterizer.cpp \
+        model/parameterization/ShapePreservingParameterizer.cpp \
         view/MainWindow.cpp \
         view/RenderingWidget.cpp \
         utils/Utils.cpp
@@ -42,8 +47,13 @@ HEADERS += \
         GlobalFunctions.h \
         model/HE_mesh/Mesh3D.h \
         model/HE_mesh/Vec.h \
+        model/parameterization/Parameterizer.h \
+        model/parameterization/FixedBorderParameterizer.h \
+        model/parameterization/UniformParameterizer.h \
+        model/parameterization/WeightedLeastSquaresParameterizer.h \
+        model/parameterization/ShapePreservingParameterizer.h \
         utils/Logger.h \
-        Utils/Utils.h
+        utils/Utils.h
 
 LIBS += -lglut -lGLU
 

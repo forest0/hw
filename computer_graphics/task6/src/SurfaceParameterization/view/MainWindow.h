@@ -7,6 +7,7 @@
 class QLabel;
 class QPushButton;
 class QCheckBox;
+class QRadioButton;
 class QGroupBox;
 class RenderingWidget;
 
@@ -24,6 +25,7 @@ private:
     void CreateToolBars();
     void CreateStatusBar();
     void CreateRenderGroup();
+    void CreateParameterizationGroup();
 
 protected:
     void keyPressEvent(QKeyEvent *e);
@@ -67,7 +69,13 @@ private:
     QCheckBox              * checkbox_texture_;
     QCheckBox              * checkbox_axes_;
 
+    // Parameterization RadioButtons
+    QRadioButton           * radiobutton_uniform_;
+    QRadioButton           * radiobutton_shape_preserving_;
+    QRadioButton           * radiobutton_weighted_least_square_;
+
     QGroupBox              * groupbox_render_;
+    QGroupBox              * groupbox_parameterization_;
 
     // Information
     QLabel                 * label_meshinfo_;

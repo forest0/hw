@@ -13,13 +13,15 @@
 #include "../model/ArcBall.h"
 #include "../GlobalFunctions.h"
 #include "../model/HE_mesh/Mesh3D.h"
+#include "../utils/Logger.h"
 
 RenderingWidget::RenderingWidget(QWidget *parent, 
         MainWindow* mainwindow)
     : QGLWidget(parent), ptr_mainwindow_(mainwindow),
     eye_distance_(5.0), has_lighting_(false),
     is_draw_point_(true), is_draw_edge_(false),
-    is_draw_face_(false), is_draw_texture_(false)
+    is_draw_face_(false), is_draw_texture_(false),
+    parameterizationMethod(ParameterizationMethod::UNIFORM)
 {
     ptr_arcball_ = new CArcBall(width(), height());
     ptr_mesh_ = new Mesh3D();
@@ -370,6 +372,28 @@ void RenderingWidget::CheckDrawAxes(bool bV)
     is_draw_axes_ = bV;
     updateGL();
 }
+void RenderingWidget::CheckUniform(bool bv) {
+    if (bv) {
+        parameterizationMethod = ParameterizationMethod::UNIFORM;
+        updateGL();
+    }
+}
+
+void RenderingWidget::CheckWeightedLeastSquares(bool bv) {
+    if (bv) {
+        parameterizationMethod = 
+            ParameterizationMethod::WEIGHTED_LEAST_SQUARES;
+        updateGL();
+    }
+}
+
+void RenderingWidget::CheckShapePreserving(bool bv) {
+    if (bv) {
+        parameterizationMethod = 
+            ParameterizationMethod::SHAPE_PRESERVING;
+        updateGL();
+    }
+}
 
 void RenderingWidget::DrawAxes(bool bV)
 {
@@ -429,14 +453,14 @@ void RenderingWidget::DrawPoints(bool bv)
     for (size_t i = 0; i != ptr_mesh_->num_of_vertex_list(); ++i)
     {
         glNormal3fv(verts[i]->normal().data());
-        if (verts[i]->isOnBoundary()) {
-            glColor3f(1.0, 0.0, 0.0);
-        } else {
-            glColor3f(1.0, 1.0, 1.0);
-        }
+        // if (verts[i]->isOnBoundary()) {
+        //     glColor3f(1.0, 0.0, 0.0);
+        // } else {
+        //     glColor3f(1.0, 1.0, 1.0);
+        // }
         glVertex3fv(verts[i]->position().data());
     }
-    glColor3f(1.0, 1.0, 1.0);
+    // glColor3f(1.0, 1.0, 1.0);
     glEnd();
 }
 
@@ -499,6 +523,13 @@ void RenderingWidget::DrawFace(bool bv)
     glEnd();
 }
 
+/********** <add by forest9643, 15-01-18> **********/
+#include "../model/parameterization/Parameterizer.h"
+#include "../model/parameterization/UniformParameterizer.h"
+#include "../model/parameterization/WeightedLeastSquaresParameterizer.h"
+#include "../model/parameterization/ShapePreservingParameterizer.h"
+/***************************************************/
+
 void RenderingWidget::DrawTexture(bool bv)
 {
     if (!bv)
@@ -506,8 +537,33 @@ void RenderingWidget::DrawTexture(bool bv)
     if (ptr_mesh_->num_of_face_list() == 0 || !is_load_texture_)
         return;
 
-    //默认使用球面纹理映射，效果不好
-    ptr_mesh_->SphereTex();
+    // ptr_mesh_->SphereTex();
+    Parameterizer *parameterizer = nullptr;
+    const char *methodStr = nullptr;
+    switch(parameterizationMethod) {
+        case ParameterizationMethod::UNIFORM:
+            parameterizer = new UniformParameterizer(ptr_mesh_);
+            methodStr = "UNIFORM";
+            break;
+        case ParameterizationMethod::WEIGHTED_LEAST_SQUARES:
+            parameterizer = new WeightedLeastSquaresParameterizer(
+                    ptr_mesh_);
+            methodStr = "WEIGHTED_LEAST_SQUARES";
+            break;
+        case ParameterizationMethod::SHAPE_PRESERVING:
+            parameterizer = new ShapePreservingParameterizer(
+                    ptr_mesh_);
+            methodStr = "SHAPE_PRESERVING";
+            break;
+    }
+    Logger::i("parameterize with %s\n", methodStr);
+    std::vector<trimesh::vec3> parameterizedCoor =
+        parameterizer->parameterize();
+    for (auto &vert: *(ptr_mesh_->get_vertex_list())) {
+        vert->texCoord_ = parameterizedCoor[vert->id()];
+    }
+    
+    delete parameterizer;
 
     const std::vector<HE_face *>& faces = 
         *(ptr_mesh_->get_faces_list());
@@ -536,7 +592,8 @@ void RenderingWidget::DrawTexture(bool bv)
 #include "../utils/Logger.h"
 #include <cassert>
 void RenderingWidget::Debug() {
-    Logger::i("debug clicked\n");
+    Logger::d("total length of boundary: %f\n",
+            ptr_mesh_->getTotalBoundaryLength());
 }
 
 /***************************************************/

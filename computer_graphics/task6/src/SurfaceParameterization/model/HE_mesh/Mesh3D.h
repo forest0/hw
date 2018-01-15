@@ -440,5 +440,6 @@ public:
     /********** <add by forest9643, 14-01-18> **********/
 public: 
     std::vector<HE_vert *> orderedBoudaryVertices;
+    float getTotalBoundaryLength();
     /***************************************************/
 };

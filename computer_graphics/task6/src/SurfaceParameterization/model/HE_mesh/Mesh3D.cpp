@@ -781,6 +781,11 @@ bool Mesh3D::isNeighbors(HE_vert* v0, HE_vert* v1)
     HE_edge *edge = v0->pedge_;
     do 
     {
+        /********** <add by forest9643, 15-01-18> **********/
+        if (!edge) {
+            return false;
+        }
+        /***************************************************/
         if (edge->pvert_==v1)
         {
             return true;
@@ -894,27 +899,27 @@ void Mesh3D::getBoundaryVerticesInContinuousOrder(
     }
 
     // get all boundary vertices first
-    int boudaryVerticesAmount = 0;
+    int boundaryVerticesAmount = 0;
     std::list<HE_vert *> unorderedBoundaryVertices;
     for (const auto &vert : *pvertices_list_) {
         if (vert->isOnBoundary()) {
             unorderedBoundaryVertices.push_back(vert);
-            ++boudaryVerticesAmount;
+            ++boundaryVerticesAmount;
         }
     }
 
-    // Logger::d("boudaryVerticesAmount=%d, index are: ", 
-    //         boudaryVerticesAmount);
+    // Logger::d("boundaryVerticesAmount=%d, index are: ", 
+    //         boundaryVerticesAmount);
     // for (const auto &vert : unorderedBoundaryVertices) {
     //     fprintf(stderr, "%d, ", vert->id());
     // }
     // fprintf(stderr, "\n");
 
 
-    assert(boudaryVerticesAmount > 3);
+    assert(boundaryVerticesAmount > 3);
 
     boundaryVertices.clear();
-    boundaryVertices.reserve(boudaryVerticesAmount);
+    boundaryVertices.reserve(boundaryVerticesAmount);
 
     // travel from one boundary point alone the bounary, finally get a circle
     int loopCnt = 0; // do-while  loop exec amount, to prevent dead-loop
@@ -937,16 +942,16 @@ void Mesh3D::getBoundaryVerticesInContinuousOrder(
         }
         ++loopCnt;
     } while (!unorderedBoundaryVertices.empty() && 
-                (loopCnt+1 < boudaryVerticesAmount)); // dead-loop prevent
+                (loopCnt+1 < boundaryVerticesAmount)); // dead-loop prevent
 
     // check amount
     if (!unorderedBoundaryVertices.empty()) {
         Logger::e("failed to get continuous boundary vertices, "
-                "total boudaryVerticesAmount=%d, "
+                "total boundaryVerticesAmount=%d, "
                 "continuous boundary vertices found: %d, loopCnt=%d, "
                 "currentVert index: %d, "
                 "all neighborIdx of %d are as follows: \n",
-                boudaryVerticesAmount, boundaryVertices.size(), loopCnt,
+                boundaryVerticesAmount, boundaryVertices.size(), loopCnt,
                 currentVert->id(), currentVert->id());
         // print all neighborIdx of currentVert
         std::copy(currentVert->neighborIdx.cbegin(), 
@@ -963,5 +968,22 @@ void Mesh3D::getBoundaryVerticesInContinuousOrder(
 
     Logger::i("succeed to find %d continuous boundary vertices\n", 
             boundaryVertices.size());
+}
+
+float Mesh3D::getTotalBoundaryLength() {
+    int boundaryVerticesAmount = orderedBoudaryVertices.size();
+    assert(boundaryVerticesAmount > 3);
+
+    Vec3f distance = orderedBoudaryVertices.front()->position()
+        - orderedBoudaryVertices.back()->position();
+    float sum = distance.length();
+
+    for (int i = 0; i < boundaryVerticesAmount-1; ++i) {
+        distance = orderedBoudaryVertices[i+1]->position()
+            - orderedBoudaryVertices[i]->position();
+        sum += distance.length();
+    }
+
+    return sum;
 }
 /***************************************************/
