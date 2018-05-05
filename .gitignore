@@ -79,6 +79,10 @@ computer_graphics/task6/src/bin
 computer_graphics/task6/src/SurfaceParameterization/libs
 # }}}
 
+# summary {{{
+computer_graphics/summary
+# }}}
+
 # }}}
 
 
@@ -96,4 +100,9 @@ compiling/report
 
 compiling/tiny/*.dot
 compiling/tiny/tiny
+# }}}
+
+
+# msp430 {{{
+
 # }}}
