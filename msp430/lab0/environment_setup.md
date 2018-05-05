@@ -31,7 +31,7 @@ $ sudo usermod -a -G plugdev your_user_name_here
 
 注销再重新登录后就可以愉快地使用 mspdebug 而且不需要 root 权限了.
 
-## led link
+## led blink
 
 led.c 源码如下
 
