@@ -1,0 +1,22 @@
+{
+  "name": "rbot",
+  "version": "0.0.1",
+  "description": "a remote controller for air conditioner",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test/TestEntry.js"
+  },
+  "keywords": [
+    "remote",
+    "air",
+    "control"
+  ],
+  "author": "forest9643, tsaikenyoo",
+  "license": "ISC",
+  "dependencies": {
+    "serialport": "^6.2.0",
+    "telegram-bot-api": "^1.2.0",
+    "winston": "^3.0.0-rc6"
+  }
+}
